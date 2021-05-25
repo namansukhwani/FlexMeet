@@ -11,6 +11,8 @@ module.exports = {
           iconColor: '#008793',
           caption: '#62646f',
           appLight: '#242736',
+          newCard: "#ff742e",
+
         }
       }
     },
