@@ -12,7 +12,9 @@ module.exports = {
           caption: '#62646f',
           appLight: '#242736',
           newCard: "#ff742e",
-
+          newCardLight: "#ff884d",
+          otherCard: '#0e78f9',
+          otherCardLight: '#318cf9',
         }
       }
     },
