@@ -1,6 +1,9 @@
 import Head from 'next/head';
+import { useTheme } from 'next-themes'
 
 function Layout(props) {
+    const { theme, setTheme } = useTheme()
+
     return (
         <div className="dark:bg-appColor-dark bg-appColor-light min-h-screen flex font-sans" >
             <Head>
@@ -11,8 +14,8 @@ function Layout(props) {
                 {/* <!-- link manifest.json --> */}
                 <link rel="manifest" href="/manifest.json" />
                 {/* <!-- this sets the color of url bar  --> */}
-                <meta name="theme-color" content="#1c1f2e" />
-                <meta name="apple-mobile-web-app-status-bar" content="#1c1f2e" />
+                <meta name="theme-color" content={theme === 'dark' ? "#1c1f2e" : "#f5f5f5"} />
+                <meta name="apple-mobile-web-app-status-bar" content={theme === 'dark' ? "#1c1f2e" : "#f5f5f5"} />
             </Head>
             {props.children}
         </div>
