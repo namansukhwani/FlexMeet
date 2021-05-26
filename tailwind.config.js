@@ -15,6 +15,7 @@ module.exports = {
           newCardLight: "#ff884d",
           otherCard: '#0e78f9',
           otherCardLight: '#318cf9',
+          scrollBar: "#333543",
         }
       }
     },

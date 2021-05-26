@@ -2,3 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+body,html{
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+.scrollDiv::-webkit-scrollbar{
+  position            : relative;
+    background          : transparent;
+    width              : 5px;
+    border-radius       : 4px;
+    /* top                 : 10px; */
+    /* bottom: 10px; */
+    z-index             : 2;
+    cursor              : pointer;
+    opacity: 1;
+    transition: opacity 0.25s linear;
+    right: -15px;
+  }
+.scrollDiv::-webkit-scrollbar-thumb{
+  background: #62646f;
+  border-radius: 10px;
+  /* height: 220px; */
+}

@@ -1,9 +1,24 @@
+import { useState, useEffect } from 'react';
 import { RiVideoAddFill } from 'react-icons/ri'
 import { BsFillPlusSquareFill } from 'react-icons/bs';
 import { SiGooglecalendar } from 'react-icons/si';
 import { MdScreenShare } from 'react-icons/md';
+import Image from 'next/image';
+import moment from 'moment';
 
 export default function Home() {
+
+    //state
+    const [time, settime] = useState(new Date())
+
+    useEffect(() => {
+        const currentTime = setInterval(() => {
+            settime(new Date())
+        }, 1000)
+        return () => {
+            clearInterval(currentTime);
+        }
+    }, [])
 
     return (
         <>
@@ -49,8 +64,17 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
-                <div className="flex flex-col h-auto md:w-2/4 lg:w-3/5">
-
+                <div className="flex md:w-2/4 lg:w-3/5 px-6 py-3 md:py-0 lg:py-0  lg:px-6 md:px-6  ">
+                    <div className="md:overflow-y-scroll scrollDiv lg:px-6 md:px-6">
+                        <div className=" relative rounded-xl flex flex-nowrap overflow-hidden max-h-40 md:h-44 lg:h-60 md:mt-10 shadow-lg">
+                            <Image src='/images/meetClock.jpg' objectFit="cover" width={777} height={400} />
+                            <div className="absolute flex flex-col bottom-4 right-4">
+                                <h1 className="font-bold md:text-5xl text-4xl self-end text-appColor-dark">{moment(time).format('hh:mm')}</h1>
+                                <p className="self-end text-xs md:text-sm text-appColor-dark">{moment(time).format('dddd, Do MMM YYYY')}</p>
+                            </div>
+                        </div>
+                        <br />
+                    </div>
                 </div>
             </div>
         </>
