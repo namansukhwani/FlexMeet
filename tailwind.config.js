@@ -6,14 +6,17 @@ module.exports = {
       colors: {
         appColor: {
           dark: '#1c1f2e',
-          light: '#f5f5f5',
+          light: '#eeeeee',
           selectd: '#242736',
           iconColor: '#008793',
           caption: '#62646f',
           appLight: '#242736',
+          appExtraLight: "#282c3a",
           newCard: "#ff742e",
+          newCardDark: "#ef6c00",
           newCardLight: "#ff884d",
           otherCard: '#0e78f9',
+          otherCardDark: '#0e78f9',
           otherCardLight: '#318cf9',
           scrollBar: "#333543",
         }

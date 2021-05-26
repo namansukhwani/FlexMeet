@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { RiVideoAddFill } from 'react-icons/ri'
-import { BsFillPlusSquareFill } from 'react-icons/bs';
+import { BsFillPlusSquareFill, BsThreeDots } from 'react-icons/bs';
 import { SiGooglecalendar } from 'react-icons/si';
 import { MdScreenShare } from 'react-icons/md';
 import Image from 'next/image';
 import moment from 'moment';
+import { AiOutlineClockCircle } from 'react-icons/ai'
 
 export default function Home() {
 
@@ -24,9 +25,9 @@ export default function Home() {
         <>
 
             <div className="relative flex  flex-col overflow-y-scroll h-full md:overflow-y-hidden md:flex-row scrollbar-none">
-                <div className="md:border-r lg:border-r border-gray-800 px-6 py-3 md:w-2/4 lg:w-2/5 lg:py-10 lg:px-12 md:py-10 md:px-12">
+                <div className="md:border-r lg:border-r border-gray-300 dark:border-gray-800 px-6 py-3 md:w-2/4 lg:w-2/5 lg:py-10 lg:px-12 md:py-10 md:px-12">
                     <div className="grid grid-flow-row w-full grid-cols-2 gap-3 md:gap-6">
-                        <div className=" flex flex-col justify-between max-h-48 bg-appColor-newCard rounded-xl shadow-lg p-3 md:p-5">
+                        <div className=" flex flex-col justify-between max-h-48 bg-appColor-newCardDark dark:bg-appColor-newCard rounded-xl shadow-lg p-3 md:p-5">
                             <div className="w-10 h-10 md:w-14 md:h-14 flex align-middle justify-center rounded-xl bg-appColor-newCardLight">
                                 <RiVideoAddFill size={26} className=" self-center" />
                             </div>
@@ -35,7 +36,7 @@ export default function Home() {
                                 <p className="font-extralight text-xs">set up new meeting</p>
                             </div>
                         </div>
-                        <div className=" flex flex-col justify-between max-h-48 w-auto self-stretch  bg-appColor-otherCard rounded-xl shadow-lg p-3 md:p-5">
+                        <div className=" flex flex-col justify-between max-h-48 w-auto self-stretch  bg-appColor-otherCardDark dark:bg-appColor-otherCard rounded-xl shadow-lg p-3 md:p-5">
                             <div className="w-10 h-10 md:w-14 md:h-14 flex align-middle justify-center rounded-xl bg-appColor-otherCardLight">
                                 <BsFillPlusSquareFill size={20} className=" self-center" />
                             </div>
@@ -44,7 +45,7 @@ export default function Home() {
                                 <p className="font-extralight text-xs">via invitation link</p>
                             </div>
                         </div>
-                        <div className=" flex flex-col justify-between max-h-48 w-auto self-stretch  bg-appColor-otherCard rounded-xl shadow-lg p-3 md:p-5">
+                        <div className=" flex flex-col justify-between max-h-48 w-auto self-stretch  bg-appColor-otherCardDark dark:bg-appColor-otherCard rounded-xl shadow-lg p-3 md:p-5">
                             <div className="w-10 h-10 md:w-14 md:h-14 flex align-middle justify-center rounded-xl bg-appColor-otherCardLight">
                                 <SiGooglecalendar size={20} className=" self-center" />
                             </div>
@@ -53,7 +54,7 @@ export default function Home() {
                                 <p className="font-extralight text-xs">plan your meeting</p>
                             </div>
                         </div>
-                        <div className=" flex flex-col justify-between max-h-48 w-auto self-stretch  bg-appColor-otherCard rounded-xl shadow-lg p-3 md:p-5">
+                        <div className=" flex flex-col justify-between max-h-48 w-auto self-stretch  bg-appColor-otherCardDark dark:bg-appColor-otherCard rounded-xl shadow-lg p-3 md:p-5">
                             <div className="w-10 h-10 md:w-14 md:h-14 flex align-middle justify-center rounded-xl bg-appColor-otherCardLight">
                                 <MdScreenShare size={20} className=" self-center" />
                             </div>
@@ -74,6 +75,37 @@ export default function Home() {
                             </div>
                         </div>
                         <br />
+                        {[...Array(5)].map((metting, index) => {
+                            return (
+                                <div key={index.toString()} className="relative flex flex-col p-4 md:p-5 rounded-xl bg-gray-300 dark:bg-appColor-appLight h-auto mb-3 shadow-md">
+                                    <div className="flex flex-col ">
+                                        <h1 className="text-lg md:text-xl lg:text-xl font-bold">Design Daily Metting</h1>
+                                        <div className="flex flex-row text-appColor-caption">
+                                            <AiOutlineClockCircle size={10} className="mr-1 text-xs self-center" />
+                                            <p className=" text-xs">10:00 - 11:00 | starts in 18 hrs</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col md:flex-row md:justify-between ">
+                                        <div>
+
+                                        </div>
+                                        <div className="flex flex-row-reverse mt-4">
+                                            <button type="button" className="bg-appColor-otherCard rounded-xl p-2 focus:outline-none outline-none text-sm md:text-base px-3">
+                                                Start
+                                            </button>
+                                            <div className=" bg-gray-400 dark:bg-appColor-appExtraLight rounded-xl p-2 focus:outline-none outline-none text-sm md:text-base px-3 mr-2">
+                                                id
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="z-10 absolute top-4 right-4 md:right-5 md:top-5 bg-gray-400 w-min p-1 rounded-xl dark:bg-appColor-appExtraLight">
+                                        <BsThreeDots size={25} />
+                                    </div>
+                                </div>
+                            )
+                        })
+                        }
                     </div>
                 </div>
             </div>

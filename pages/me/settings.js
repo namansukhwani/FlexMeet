@@ -1,18 +1,32 @@
 import { useTheme } from 'next-themes'
+import { BsToggleOn, BsToggleOff } from 'react-icons/bs';
 
 export default function Settings() {
     const { theme, setTheme } = useTheme()
 
     return (
         <>
-            <button
-                aria-label="Toggle Dark Mode"
-                type="button"
-                className="p-3 h-12 w-12 order-2 md:order-3"
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            >Toggle Theme</button>
-            <p className="dark:text-red-900  p-10 self-center " >Settings</p>
+            <div className="flex flex-row justify-between align-middle p-4">
+                <div className="flex flex-row justify-start align-middle">
+                    <h1 className="text-lg mr-3 self-center" >Change Theme</h1>
+                    <button
+                        aria-label="Toggle Dark Mode"
+                        type="button"
+                        className=" outline-none focus:outline-none "
+                        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                    >
+                        {theme === 'dark' ?
+                            <BsToggleOn className="text-3xl text-appColor-otherCard self-center" />
+                            :
+                            <BsToggleOff className="text-3xl self-center" />
+                        }
+                    </button>
+                </div>
 
+                <div className=" self-center float-right bg-gray-300 dark:bg-appColor-appExtraLight rounded-xl p-2  text-sm md:text-base px-3">
+                    {theme}
+                </div>
+            </div>
         </ >
     )
 }

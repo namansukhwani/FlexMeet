@@ -14,8 +14,8 @@ function Layout(props) {
                 {/* <!-- link manifest.json --> */}
                 <link rel="manifest" href="/manifest.json" />
                 {/* <!-- this sets the color of url bar  --> */}
-                <meta name="theme-color" content={theme === 'dark' ? "#1c1f2e" : "#f5f5f5"} />
-                <meta name="apple-mobile-web-app-status-bar" content={theme === 'dark' ? "#1c1f2e" : "#f5f5f5"} />
+                <meta name="theme-color" content={theme === 'dark' ? "#1c1f2e" : "#eeeeee"} />
+                <meta name="apple-mobile-web-app-status-bar" content={theme === 'dark' ? "#1c1f2e" : "#eeeeee"} />
             </Head>
             {props.children}
         </div>
