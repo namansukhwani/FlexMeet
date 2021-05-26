@@ -31,7 +31,7 @@ function Header(props) {
     }
 
     return (
-        <header className=" flex flex-row p-4 md:p-4 z-10 md:border-b bg-appColor-light dark:bg-appColor-dark border-gray-800 justify-between align-middle shadow-sm md:shadow-none">
+        <header className="absolute top-0 left-0 right-0 flex flex-row p-4 md:p-4 z-10 md:border-b bg-appColor-light dark:bg-appColor-dark border-gray-800 justify-between align-middle shadow-sm md:shadow-none">
             <div className="flex flex-row justify-start align-middle" >
                 <TiThMenu type="button" size={27} className="self-center md:hidden" onClick={() => props.openSidebarMobile()} />
                 <h1 className="font-extrabold text-lg md:text-xl ml-3 self-center">{currentRout()}</h1>

@@ -26,7 +26,7 @@ function UserLayout(props) {
                 <title>FlexMeet</title>
             </Head>
             <SideBar isSidebarOpen={isSidebarOpen} closeSidebarMobile={() => setisSidebarOpen(false)} openSidebarMobile={() => { setisSidebarOpen(!isSidebarOpen); }} />
-            <main className="w-screen">
+            <main className=" relative h-screen w-full pt-16">
                 {isSidebarOpen && <div className=" z-20 absolute top-0 bottom-0 right-0 left-0 inset-0 bg-gray-500 bg-opacity-30 transition-opacity md:hidden" onClick={() => { setisSidebarOpen(!isSidebarOpen); }} />}
                 <Header openSidebarMobile={() => { setisSidebarOpen(!isSidebarOpen); }} />
                 {props.children}
