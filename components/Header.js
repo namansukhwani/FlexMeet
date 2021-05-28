@@ -47,9 +47,9 @@ function Header(props) {
                         placeholder="Search By Keywords"
                     />
                 </div>
-                <div className="w-8 h-8 md:w-10 md:h-10 flex align-middle justify-center rounded-xl bg-appColor-iconColor ml-4 self-center">
+                <button className="w-8 h-8 md:w-10 md:h-10 flex align-middle justify-center rounded-xl bg-appColor-iconColor ml-4 self-center outline-none focus:outline-none">
                     <FaUser className="self-center text-lg md:text-xl " />
-                </div>
+                </button>
             </div>
         </header>
     )

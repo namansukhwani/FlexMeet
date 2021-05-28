@@ -2,20 +2,25 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { BsCameraVideoFill } from 'react-icons/bs';
 import { AiFillGithub, AiFillLinkedin, AiOutlineGoogle } from 'react-icons/ai'
+import io from 'socket.io-client';
+
 export default function Login() {
 
   const router = useRouter();
 
   useEffect(() => {
     // router.push('/me', undefined, { shallow: true })
-
   }, [])
 
   return (
     <>
       <div className="relative h-full w-full flex flex-grow justify-center align-middle">
-        <div className="w-4/5 h-2/5 lg:w-1/4 md:w-2/5 p-6 md:p-10 flex flex-col justify-between md:self-center -mt-16 dark:bg-appColor-appLight bg-gray-300 rounded-xl shadow-lg self-center">
-          <h1 className="font-bold text-4xl ">Welcome to FlexMeet</h1>
+        <div className=" w-4/5 h-2/5 lg:w-1/4 md:w-2/5 p-6 md:p-10 flex flex-col justify-between md:self-center -mt-16 dark:bg-appColor-appLight bg-gray-300 rounded-xl shadow-lg self-center">
+          <div>
+            <h1 className="font-bold text-4xl ">Welcome to FlexMeet</h1>
+            <p className="text-xs text-appColor-caption">By logging in you accept our <a href="" className="underline text-black dark:text-white">Privacy Policy</a> and <a href="" className="underline text-black dark:text-white">Terms of Service</a> .</p>
+          </div>
+
           <button onClick={() => router.push('/me', undefined, { shallow: true })} type="button" className="flex p-3 bg-appColor-light dark:bg-appColor-appExtraLight rounded-xl justify-items-center justify-center align-middle flex-row outline-none focus:outline-none shadow-lg">
             <AiOutlineGoogle size={28} className="self-center" />
             <h1 className="font-bold text-base self-center ml-3"> Login With Google</h1>

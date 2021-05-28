@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Header from './Header';
 import SideBar from './SideBar';
 import { useMediaQuery } from '@react-hook/media-query'
+import ProfileModal from './profileModal';
 
 function UserLayout(props) {
 
@@ -10,6 +11,7 @@ function UserLayout(props) {
 
     //states
     const [isSidebarOpen, setisSidebarOpen] = useState(false);
+    const [isModalOpen, setisModalOpen] = useState(false)
 
     //lifecycles
     useEffect(() => {
@@ -26,9 +28,10 @@ function UserLayout(props) {
                 <title>FlexMeet</title>
             </Head>
             <SideBar isSidebarOpen={isSidebarOpen} closeSidebarMobile={() => setisSidebarOpen(false)} openSidebarMobile={() => { setisSidebarOpen(!isSidebarOpen); }} />
+            {/* {isModalOpen && <ProfileModal closeModal={() => setisModalOpen(false)} />} */}
             <main className=" relative h-screen w-full pt-16">
                 {isSidebarOpen && <div className=" z-20 absolute top-0 bottom-0 right-0 left-0 inset-0 bg-gray-500 bg-opacity-30 transition-opacity md:hidden" onClick={() => { setisSidebarOpen(!isSidebarOpen); }} />}
-                <Header openSidebarMobile={() => { setisSidebarOpen(!isSidebarOpen); }} />
+                <Header openModal={() => setisModalOpen(!isModalOpen)} openSidebarMobile={() => { setisSidebarOpen(!isSidebarOpen); }} />
                 {props.children}
             </main>
 

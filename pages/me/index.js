@@ -6,6 +6,7 @@ import { MdScreenShare } from 'react-icons/md';
 import Image from 'next/image';
 import moment from 'moment';
 import { AiOutlineClockCircle } from 'react-icons/ai'
+import { scheduledMeets } from '../../data/scheduledMeetd'
 
 export default function Home() {
 
@@ -75,26 +76,56 @@ export default function Home() {
                             </div>
                         </div>
                         <br />
-                        {[...Array(5)].map((metting, index) => {
+                        {scheduledMeets.map((metting, index) => {
                             return (
                                 <div key={index.toString()} className="relative flex flex-col p-4 md:p-5 rounded-xl bg-gray-300 dark:bg-appColor-appLight h-auto mb-3 shadow-md transform transition duration-200 md:hover:scale-105">
                                     <div className="flex flex-col ">
-                                        <h1 className="text-lg md:text-xl lg:text-xl font-bold">Design Daily Metting</h1>
+                                        <h1 className="text-lg md:text-xl lg:text-xl font-bold">{metting.meetName}</h1>
                                         <div className="flex flex-row text-appColor-caption">
                                             <AiOutlineClockCircle size={10} className="mr-1 text-xs self-center" />
-                                            <p className=" text-xs">10:00 - 11:00 | starts in 18 hrs</p>
+                                            <p className=" text-xs">{metting.time}</p>
                                         </div>
                                     </div>
-                                    <div className="flex flex-col md:flex-row md:justify-between ">
-                                        <div>
+                                    <div className="flex flex-col lg:flex-row lg:justify-between ">
+                                        <div className="mt-3 grid grid-flow-col w-min gap-1">
+                                            {metting.members.length <= 3 ?
+                                                metting.members.map((src, index) => {
+                                                    return (
+                                                        <div key={index.toString()} className="relative rounded-lg flex flex-nowrap overflow-hidden h-8 w-8 md:h-9 md:w-9 self-center shadow-sm">
+                                                            <Image src={src} objectFit="cover" width={40} height={40} />
+                                                        </div>
+                                                    )
+                                                })
+                                                :
+                                                metting.members.slice(0, 3).map((src, index) => {
+                                                    if (index === 2) {
+                                                        return (
+                                                            <>
+                                                                <div key={index.toString()} className="relative rounded-lg flex flex-nowrap overflow-hidden h-8 w-8 md:h-9 md:w-9  self-center shadow-sm">
+                                                                    <Image src={src} objectFit="cover" width={40} height={40} />
+                                                                </div>
+                                                                <div className="relative rounded-lg flex flex-nowrap overflow-hidden h-8 w-8 md:h-9 md:w-9 self-center shadow-sm text-xs  bg-appColor-otherCard justify-center items-center">
+                                                                    {`+${metting.members.length - 3}`}
+                                                                </div>
+                                                            </>
+                                                        )
+                                                    }
+                                                    return (
+                                                        <div key={index.toString()} className="relative rounded-lg flex flex-nowrap overflow-hidden h-8 w-8 md:h-9 md:w-9 self-center shadow-sm">
+                                                            <Image src={src} objectFit="cover" width={40} height={40} />
+                                                        </div>
+                                                    )
 
+                                                })
+
+                                            }
                                         </div>
                                         <div className="flex flex-row-reverse mt-4">
                                             <button type="button" className="bg-appColor-otherCard rounded-xl p-2 focus:outline-none outline-none text-sm md:text-base px-3">
                                                 Start
                                             </button>
-                                            <div className=" bg-gray-400 dark:bg-appColor-appExtraLight rounded-xl p-2 focus:outline-none outline-none text-sm md:text-base px-3 mr-2">
-                                                id
+                                            <div className=" bg-gray-400 dark:bg-appColor-appExtraLight rounded-xl p-2 focus:outline-none outline-none text-xs md:text-sm px-3 mr-2">
+                                                {metting.id}
                                             </div>
                                         </div>
                                     </div>
