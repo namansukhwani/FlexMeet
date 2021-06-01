@@ -8,6 +8,7 @@ import moment from 'moment';
 import { AiOutlineClockCircle } from 'react-icons/ai'
 import { useSession, signIn, signOut } from 'next-auth/client'
 import { useRouter } from 'next/router';
+import { scheduledMeets } from '../../data/scheduledMeetd'
 
 export default function Home(props) {
     const [session, loading] = useSession()
@@ -88,7 +89,7 @@ export default function Home(props) {
                             </div>
                         </div>
                         <br />
-                        {props.scheduledMeets.map((metting, index) => {
+                        {scheduledMeets.map((metting, index) => {
                             return (
                                 <div key={index} className="relative flex flex-col p-4 md:p-5 rounded-xl bg-gray-300 dark:bg-appColor-appLight h-auto mb-3 shadow-md transform transition duration-200 md:hover:scale-105">
                                     <div className="flex flex-col ">
@@ -156,22 +157,22 @@ export default function Home(props) {
     )
 }
 
-export const getStaticProps = async (context) => {
+// export const getStaticProps = async (context) => {
 
-    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/data/recentmeets`)
-    const data = await res.json()
+//     const res = await fetch(`${process.env.NEXTAUTH_URL}/api/data/recentmeets`)
+//     const data = await res.json()
 
-    if (!data) {
-        return {
-            props: {
-                scheduledMeets: []
-            }
-        }
-    }
+//     if (!data) {
+//         return {
+//             props: {
+//                 scheduledMeets: []
+//             }
+//         }
+//     }
 
-    return {
-        props: {
-            scheduledMeets: data.data
-        }
-    }
-}
+//     return {
+//         props: {
+//             scheduledMeets: data.data
+//         }
+//     }
+// }
