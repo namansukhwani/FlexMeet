@@ -3,12 +3,17 @@ import { TiThMenu } from 'react-icons/ti'
 import { FaUser } from 'react-icons/fa'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { useRouter } from 'next/router'
+import { useSession, signIn, signOut } from 'next-auth/client'
+
 function Header(props) {
 
     const router = useRouter();
 
     //states
     const [search, setsearch] = useState("");
+
+    //lifecycle
+
 
     //methods
     const currentRout = () => {
@@ -47,7 +52,7 @@ function Header(props) {
                         placeholder="Search By Keywords"
                     />
                 </div>
-                <button className="w-8 h-8 md:w-10 md:h-10 flex align-middle justify-center rounded-xl bg-appColor-iconColor ml-4 self-center outline-none focus:outline-none">
+                <button onClick={() => signOut()} className="w-8 h-8 md:w-10 md:h-10 flex align-middle justify-center rounded-xl bg-appColor-iconColor ml-4 self-center outline-none focus:outline-none">
                     <FaUser className="self-center text-lg md:text-xl " />
                 </button>
             </div>

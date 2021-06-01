@@ -6,14 +6,17 @@ import { MdScreenShare } from 'react-icons/md';
 import Image from 'next/image';
 import moment from 'moment';
 import { AiOutlineClockCircle } from 'react-icons/ai'
-import { scheduledMeets } from '../../data/scheduledMeetd'
+import { useSession, signIn, signOut } from 'next-auth/client'
+import { useRouter } from 'next/router';
 
-export default function Home() {
-
+export default function Home(props) {
+    const [session, loading] = useSession()
+    const router = useRouter();
     //state
     const [time, settime] = useState(new Date())
 
     useEffect(() => {
+
         const currentTime = setInterval(() => {
             settime(new Date())
         }, 1000)
@@ -22,13 +25,22 @@ export default function Home() {
         }
     }, [])
 
+    if (typeof window !== "undefined" && loading) return null;
+
+    if (!session) {
+        return (
+            <>
+            </>
+        )
+    }
+
     return (
         <>
 
             <div className="relative flex  flex-col overflow-y-scroll h-full md:overflow-y-hidden md:flex-row scrollbar-none">
                 <div className="md:border-r lg:border-r border-gray-300 dark:border-gray-800 px-6 py-3 md:w-2/4 lg:w-2/5 lg:py-10 lg:px-12 md:py-10 md:px-12">
                     <div className="grid grid-flow-row w-full grid-cols-2 gap-3 md:gap-6">
-                        <div className=" flex flex-col justify-between max-h-48 bg-appColor-newCardDark dark:bg-appColor-newCard rounded-xl shadow-lg p-3 md:p-5 transform transition duration-200 ease-in-out md:hover:scale-105">
+                        <div key="sjdfbnas" className=" flex flex-col justify-between max-h-48 bg-appColor-newCardDark dark:bg-appColor-newCard rounded-xl shadow-lg p-3 md:p-5 transform transition duration-200 ease-in-out md:hover:scale-105">
                             <div className="w-10 h-10 md:w-14 md:h-14 flex align-middle justify-center rounded-xl bg-appColor-newCardLight">
                                 <RiVideoAddFill size={26} className=" self-center" />
                             </div>
@@ -37,7 +49,7 @@ export default function Home() {
                                 <p className="font-extralight text-xs">set up new meeting</p>
                             </div>
                         </div>
-                        <div className=" flex flex-col justify-between max-h-48 w-auto self-stretch  bg-appColor-otherCardDark dark:bg-appColor-otherCard rounded-xl shadow-lg p-3 md:p-5 transform transition duration-200 ease-in-out md:hover:scale-105">
+                        <div key="dgfhsf" className=" flex flex-col justify-between max-h-48 w-auto self-stretch  bg-appColor-otherCardDark dark:bg-appColor-otherCard rounded-xl shadow-lg p-3 md:p-5 transform transition duration-200 ease-in-out md:hover:scale-105">
                             <div className="w-10 h-10 md:w-14 md:h-14 flex align-middle justify-center rounded-xl bg-appColor-otherCardLight">
                                 <BsFillPlusSquareFill size={20} className=" self-center" />
                             </div>
@@ -46,7 +58,7 @@ export default function Home() {
                                 <p className="font-extralight text-xs">via invitation link</p>
                             </div>
                         </div>
-                        <div className=" flex flex-col justify-between max-h-48 w-auto self-stretch  bg-appColor-otherCardDark dark:bg-appColor-otherCard rounded-xl shadow-lg p-3 md:p-5 transform transition duration-200 ease-in-out md:hover:scale-105">
+                        <div key="kiuwfhmdstgt" className=" flex flex-col justify-between max-h-48 w-auto self-stretch  bg-appColor-otherCardDark dark:bg-appColor-otherCard rounded-xl shadow-lg p-3 md:p-5 transform transition duration-200 ease-in-out md:hover:scale-105">
                             <div className="w-10 h-10 md:w-14 md:h-14 flex align-middle justify-center rounded-xl bg-appColor-otherCardLight">
                                 <SiGooglecalendar size={20} className=" self-center" />
                             </div>
@@ -55,7 +67,7 @@ export default function Home() {
                                 <p className="font-extralight text-xs">plan your meeting</p>
                             </div>
                         </div>
-                        <div className=" flex flex-col justify-between max-h-48 w-auto self-stretch  bg-appColor-otherCardDark dark:bg-appColor-otherCard rounded-xl shadow-lg p-3 md:p-5 transform transition duration-200 ease-in-out md:hover:scale-105">
+                        <div key="dfgsnjjqwr" className=" flex flex-col justify-between max-h-48 w-auto self-stretch  bg-appColor-otherCardDark dark:bg-appColor-otherCard rounded-xl shadow-lg p-3 md:p-5 transform transition duration-200 ease-in-out md:hover:scale-105">
                             <div className="w-10 h-10 md:w-14 md:h-14 flex align-middle justify-center rounded-xl bg-appColor-otherCardLight">
                                 <MdScreenShare size={20} className=" self-center" />
                             </div>
@@ -76,13 +88,13 @@ export default function Home() {
                             </div>
                         </div>
                         <br />
-                        {scheduledMeets.map((metting, index) => {
+                        {props.scheduledMeets.map((metting, index) => {
                             return (
-                                <div key={index.toString()} className="relative flex flex-col p-4 md:p-5 rounded-xl bg-gray-300 dark:bg-appColor-appLight h-auto mb-3 shadow-md transform transition duration-200 md:hover:scale-105">
+                                <div key={index} className="relative flex flex-col p-4 md:p-5 rounded-xl bg-gray-300 dark:bg-appColor-appLight h-auto mb-3 shadow-md transform transition duration-200 md:hover:scale-105">
                                     <div className="flex flex-col ">
                                         <h1 className="text-lg md:text-xl lg:text-xl font-bold">{metting.meetName}</h1>
                                         <div className="flex flex-row text-appColor-caption">
-                                            <AiOutlineClockCircle size={10} className="mr-1 text-xs self-center" />
+                                            <AiOutlineClockCircle key="kmojsju" size={10} className="mr-1 text-xs self-center" />
                                             <p className=" text-xs">{metting.time}</p>
                                         </div>
                                     </div>
@@ -91,7 +103,7 @@ export default function Home() {
                                             {metting.members.length <= 3 ?
                                                 metting.members.map((src, index) => {
                                                     return (
-                                                        <div key={index.toString()} className="relative rounded-lg flex flex-nowrap overflow-hidden h-8 w-8 md:h-9 md:w-9 self-center shadow-sm">
+                                                        <div key={index} className="relative rounded-lg flex flex-nowrap overflow-hidden h-8 w-8 md:h-9 md:w-9 self-center shadow-sm">
                                                             <Image src={src} objectFit="cover" width={40} height={40} />
                                                         </div>
                                                     )
@@ -101,7 +113,7 @@ export default function Home() {
                                                     if (index === 2) {
                                                         return (
                                                             <>
-                                                                <div key={index.toString()} className="relative rounded-lg flex flex-nowrap overflow-hidden h-8 w-8 md:h-9 md:w-9  self-center shadow-sm">
+                                                                <div key={index} className="relative rounded-lg flex flex-nowrap overflow-hidden h-8 w-8 md:h-9 md:w-9  self-center shadow-sm">
                                                                     <Image src={src} objectFit="cover" width={40} height={40} />
                                                                 </div>
                                                                 <div className="relative rounded-lg flex flex-nowrap overflow-hidden h-8 w-8 md:h-9 md:w-9 self-center shadow-sm text-xs  bg-appColor-otherCard justify-center items-center">
@@ -111,7 +123,7 @@ export default function Home() {
                                                         )
                                                     }
                                                     return (
-                                                        <div key={index.toString()} className="relative rounded-lg flex flex-nowrap overflow-hidden h-8 w-8 md:h-9 md:w-9 self-center shadow-sm">
+                                                        <div key={index} className="relative rounded-lg flex flex-nowrap overflow-hidden h-8 w-8 md:h-9 md:w-9 self-center shadow-sm">
                                                             <Image src={src} objectFit="cover" width={40} height={40} />
                                                         </div>
                                                     )
@@ -142,4 +154,24 @@ export default function Home() {
             </div>
         </>
     )
+}
+
+export const getStaticProps = async (context) => {
+
+    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/data/recentmeets`)
+    const data = await res.json()
+
+    if (!data) {
+        return {
+            props: {
+                scheduledMeets: []
+            }
+        }
+    }
+
+    return {
+        props: {
+            scheduledMeets: data.data
+        }
+    }
 }
