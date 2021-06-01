@@ -4,16 +4,18 @@ import { FaUser } from 'react-icons/fa'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { useRouter } from 'next/router'
 import { useSession, signIn, signOut } from 'next-auth/client'
+import Image from 'next/image';
 
 function Header(props) {
 
+    const [session] = useSession();
     const router = useRouter();
 
     //states
     const [search, setsearch] = useState("");
 
     //lifecycle
-
+    console.log(session.user);
 
     //methods
     const currentRout = () => {
@@ -52,8 +54,14 @@ function Header(props) {
                         placeholder="Search By Keywords"
                     />
                 </div>
-                <button onClick={() => signOut()} className="w-8 h-8 md:w-10 md:h-10 flex align-middle justify-center rounded-xl bg-appColor-iconColor ml-4 self-center outline-none focus:outline-none">
-                    <FaUser className="self-center text-lg md:text-xl " />
+                <button onClick={() => signOut()} className="relative w-8 h-8 md:w-10 md:h-10 flex align-middle justify-center rounded-xl bg-appColor-iconColor ml-4 self-center outline-none focus:outline-none">
+                    {!session ?
+                        <FaUser className="self-center text-lg md:text-xl " />
+                        :
+                        // <Image src={session.user.picture} objectFit="cover" width={40} height={40} />
+                        <FaUser className="self-center text-lg md:text-xl " />
+                    }
+
                 </button>
             </div>
         </header>

@@ -47,7 +47,7 @@ export default function Login() {
   return (
     <>
       <div className="relative h-full w-full flex flex-grow justify-center align-middle">
-        {loading ?
+        {session || loading ?
           <div className="flex justify-center items-center">
             <HashLoader size={!matchsSM ? 60 : 100} color={theme == "dark" ? "#fff" : "#62646f"} />
           </div>

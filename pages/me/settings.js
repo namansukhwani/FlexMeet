@@ -1,5 +1,6 @@
 import { useTheme } from 'next-themes'
 import { BsToggleOn, BsToggleOff } from 'react-icons/bs';
+import { signOut } from 'next-auth/client'
 
 export default function Settings() {
     const { theme, setTheme } = useTheme()
@@ -26,6 +27,11 @@ export default function Settings() {
                 <div className=" self-center float-right bg-gray-300 dark:bg-appColor-appExtraLight rounded-xl p-2  text-sm md:text-base px-3">
                     {theme}
                 </div>
+            </div>
+            <div className="flex justify-between align-middle p-4 mt-2">
+                <button onClick={() => { signOut() }} type="button" className="py-3 self-stretch w-full bg-red-700 text-base font-medium text-white shadow-lg flex justify-center items-center rounded-xl md:w-1/5 focus:outline-none outline-none">
+                    LOGOUT
+                </button>
             </div>
         </ >
     )
