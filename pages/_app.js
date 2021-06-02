@@ -22,7 +22,7 @@ function MyApp({ Component, pageProps, router }) {
     wakeServer();
 
 
-  })
+  }, [])
 
   // console.log(router.pathname)
   return (
