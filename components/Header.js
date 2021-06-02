@@ -15,7 +15,6 @@ function Header(props) {
     const [search, setsearch] = useState("");
 
     //lifecycle
-    console.log(session.user);
 
     //methods
     const currentRout = () => {
@@ -54,12 +53,12 @@ function Header(props) {
                         placeholder="Search By Keywords"
                     />
                 </div>
-                <button onClick={() => signOut()} className="relative w-8 h-8 md:w-10 md:h-10 flex align-middle justify-center rounded-xl bg-appColor-iconColor ml-4 self-center outline-none focus:outline-none">
+                <button onClick={() => signOut()} className="relative w-8 h-8 md:w-10 md:h-10 flex align-middle justify-center rounded-xl bg-appColor-iconColor ml-4 self-center outline-none focus:outline-none overflow-hidden">
                     {!session ?
                         <FaUser className="self-center text-lg md:text-xl " />
                         :
-                        // <Image src={session.user.picture} objectFit="cover" width={40} height={40} />
-                        <FaUser className="self-center text-lg md:text-xl " />
+                        <Image src={session.user.picture} objectFit="cover" width={40} height={40} />
+                        // <FaUser className="self-center text-lg md:text-xl " />
                     }
 
                 </button>

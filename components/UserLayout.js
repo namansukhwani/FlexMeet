@@ -32,6 +32,7 @@ function UserLayout(props) {
     useEffect(() => {
         console.log("change session", session);
         console.log("session loading", loading);
+        // if (session) console.log("access Token", session.accessToken);
         if (!session && !loading) router.replace('/', undefined, { shallow: true })
     }, [session, loading])
 
