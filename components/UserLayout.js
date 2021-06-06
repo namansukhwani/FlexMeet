@@ -94,7 +94,7 @@ function UserLayout(props) {
 
     //views
 
-    if (!session) {
+    if (!session && props.user.isLoading) {
         return (
             <div className="relative h-screen w-full flex justify-center items-center">
                 <HashLoader size={!matchsSM ? 60 : 100} color={theme == "dark" ? "#fff" : "#62646f"} />
