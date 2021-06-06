@@ -9,8 +9,18 @@ import { AiOutlineClockCircle } from 'react-icons/ai'
 import { useSession, signIn, signOut } from 'next-auth/client'
 import { useRouter } from 'next/router';
 import { scheduledMeets } from '../../data/scheduledMeetd'
+import { connect } from 'react-redux';
 
-export default function Home(props) {
+const mapStateToProps = state => ({
+    user: state.user
+})
+
+const mapDispatchToProps = dispatch => {
+    return {
+    }
+}
+
+function Home(props) {
     const [session, loading] = useSession()
     const router = useRouter();
     //state
@@ -88,7 +98,7 @@ export default function Home(props) {
                                 <p className="self-end text-xs md:text-sm text-appColor-dark">{moment(time).format('dddd, Do MMM YYYY')}</p>
                             </div>
                             <div className="absolute flex top-3 right-4">
-                                <h1 className=" font-bold md:text-3xl text-xl self-end text-appColor-dark">{"Welcome, " + session.user.name}</h1>
+                                <h1 className=" font-bold md:text-3xl text-xl self-end text-appColor-dark">{"Welcome, " + props.user.user.name}</h1>
                             </div>
                         </div>
                         <br />
@@ -179,3 +189,5 @@ export default function Home(props) {
 //         }
 //     }
 // }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home)

@@ -78,21 +78,21 @@ callbacks.jwt = async function jwt(token, user) {
 
 callbacks.session = async function session(session, token) {
     session.accessToken = token.accessToken
-    try {
-        const res = await fetch(`${url}/users`, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + session.accessToken,
-                'Content-Type': 'application/json'
-            },
-        })
+    // try {
+    //     const res = await fetch(`${url}/users`, {
+    //         method: 'GET',
+    //         headers: {
+    //             'Authorization': 'Bearer ' + session.accessToken,
+    //             'Content-Type': 'application/json'
+    //         },
+    //     })
 
-        const data = await res.json()
-        session.user = data.data;
-    }
-    catch (err) {
-        console.log(err);
-    }
+    //     const data = await res.json()
+    //     session.user = data.data;
+    // }
+    // catch (err) {
+    //     console.log(err);
+    // }
 
     return session
 }

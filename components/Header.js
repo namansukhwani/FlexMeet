@@ -1,18 +1,36 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { TiThMenu } from 'react-icons/ti'
 import { FaUser } from 'react-icons/fa'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { useRouter } from 'next/router'
 import { useSession, signIn, signOut } from 'next-auth/client'
 import Image from 'next/image';
+import { connect } from 'react-redux';
+import { logoutUser } from '../redux/slices/userSlice'
+import { useDetectOutsideClick } from './../hooks/useDetectOustsideClick';
+import ProfileDropdownMenu from './ProfileDropdownMenu'
+
+const mapStateToProps = state => ({
+    user: state.user
+})
+
+const mapDispatchToProps = dispatch => {
+    return {
+        logoutUser: () => dispatch(logoutUser()),
+    }
+}
 
 function Header(props) {
 
-    const [session] = useSession();
+    // const [session] = useSession();
     const router = useRouter();
+
+    //refs
+    const profileMenuRef = useRef(null);
 
     //states
     const [search, setsearch] = useState("");
+    const [isProfileMenuOpen, setIsProfileMenuOpen] = useDetectOutsideClick(profileMenuRef, false);
 
     //lifecycle
 
@@ -36,6 +54,13 @@ function Header(props) {
         return ""
     }
 
+    const logOut = () => {
+        signOut();
+        props.logoutUser()
+    }
+
+    //views
+
     return (
         <header className="absolute top-0 left-0 right-0 flex flex-row p-4 md:p-4 z-10 md:border-b bg-appColor-light dark:bg-appColor-dark border-gray-300 dark:border-gray-800 justify-between align-middle shadow-sm md:shadow-none">
             <div className="flex flex-row justify-start align-middle" >
@@ -53,18 +78,19 @@ function Header(props) {
                         placeholder="Search By Keywords"
                     />
                 </div>
-                <button onClick={() => signOut()} className="relative w-8 h-8 md:w-10 md:h-10 flex align-middle justify-center rounded-xl bg-appColor-iconColor ml-4 self-center outline-none focus:outline-none overflow-hidden">
-                    {!session ?
+                <button onClick={() => { setIsProfileMenuOpen(!isProfileMenuOpen) }} className="relative w-8 h-8 md:w-10 md:h-10 flex align-middle justify-center rounded-xl bg-appColor-iconColor ml-4 self-center outline-none focus:outline-none overflow-hidden">
+                    {props.user.isLoading ?
                         <FaUser className="self-center text-lg md:text-xl " />
                         :
-                        <Image src={session.user.picture} objectFit="cover" width={40} height={40} />
+                        <Image src={props.user.user.picture} objectFit="cover" width={40} height={40} />
                         // <FaUser className="self-center text-lg md:text-xl " />
                     }
 
                 </button>
             </div>
+            <ProfileDropdownMenu refVar={profileMenuRef} isOpen={isProfileMenuOpen} logout={() => logOut()} />
         </header>
     )
 }
 
-export default Header;
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

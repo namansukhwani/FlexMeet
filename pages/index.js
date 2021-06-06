@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { BsCameraVideoFill } from 'react-icons/bs';
 import { AiFillGithub, AiFillLinkedin, AiOutlineGoogle } from 'react-icons/ai'
-import { io } from 'socket.io-client';
 import { useSession, signIn, signOut } from 'next-auth/client'
 import HashLoader from 'react-spinners/HashLoader'
 import { useTheme } from 'next-themes'
@@ -36,8 +35,8 @@ export default function Login() {
   }, [])
 
   useEffect(() => {
-    console.log("change session", session);
-    console.log("session loading", loading);
+    // console.log("change session", session);
+    // console.log("session loading", loading);
     if (session && !loading) {
       router.replace('/me')
       // setsessionLoading(false)

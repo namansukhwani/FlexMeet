@@ -1,11 +1,12 @@
 import Head from 'next/head';
 import { useTheme } from 'next-themes'
+import { ToastContainer } from 'react-toastify';
 
 function Layout(props) {
     const { theme, setTheme } = useTheme()
 
     return (
-        <div className="dark:bg-appColor-dark bg-appColor-light flex h-screen w-screen font-sans" >
+        <div className="relative dark:bg-appColor-dark bg-appColor-light flex h-screen w-screen font-sans" >
             <Head>
                 <title>FlexMeet</title>
                 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -17,6 +18,7 @@ function Layout(props) {
                 <meta name="theme-color" content={theme === 'dark' ? "#1c1f2e" : "#eeeeee"} />
                 <meta name="apple-mobile-web-app-status-bar" content={theme === 'dark' ? "#1c1f2e" : "#eeeeee"} />
             </Head>
+            <ToastContainer />
             {props.children}
         </div>
     )

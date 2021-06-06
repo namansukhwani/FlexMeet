@@ -19,6 +19,8 @@ module.exports = {
           otherCardDark: '#0e78f9',
           otherCardLight: '#318cf9',
           scrollBar: "#333543",
+          backdropBlurDark: '#282c3a98',
+          backdropBlur: '#D1D5DB98'
         }
       }
     },
