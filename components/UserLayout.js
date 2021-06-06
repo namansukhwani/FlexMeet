@@ -46,7 +46,7 @@ function UserLayout(props) {
     }, [matchsSM])
 
     useEffect(() => {
-        // console.log("change session", session);
+        console.log("change session", session);
         if (session && !loading && firstSessionCall) {
             props.fetchUser(session.accessToken);
             connectToSocketIo();
