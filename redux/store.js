@@ -1,9 +1,10 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+// import storage from 'redux-persist/lib/storage';
 import logger from 'redux-logger';
 import ReduxThunk from 'redux-thunk';
 import user from './slices/userSlice';
+import storage from './storage';
 
 const persistConfig = {
     key: 'root',
