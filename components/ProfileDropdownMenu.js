@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import Image from 'next/image';
-import { FaUserAlt } from 'react-icons/fa';
+import { FaUserAlt, FaUser } from 'react-icons/fa';
 import { AiOutlineLogout, AiFillBell, AiFillSetting } from 'react-icons/ai';
 
 const mapStateToProps = state => ({
@@ -13,6 +13,14 @@ const mapDispatchToProps = dispatch => {
 }
 
 const ProfileDropdownMenu = (props) => {
+
+    if (props.user.isLoading) {
+        return (
+            <>
+            </>
+        )
+    }
+
     return (
         <div ref={props.refVar} className={`absolute  rounded-xl overflow-hidden dark:bg-appColor-backdropBlurDark shadow-lg bg-appColor-backdropBlur backdrop-filter backdrop-blur-md top-14 md:top-20 right-4 ${props.isOpen ? "flex opacity-100" : " opacity-0 hidden"} ease-in-out duration-200 transform transition`}>
             <div className="flex flex-col p-2 ">

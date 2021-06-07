@@ -47,12 +47,13 @@ function UserLayout(props) {
 
     useEffect(() => {
         console.log("change session", session);
-        if (session && !loading && firstSessionCall) {
+        if (session && firstSessionCall) {
+            console.log("HELLO BHAI CHAL JA YRR");
             props.fetchUser(session.accessToken);
             connectToSocketIo();
             setfirstSessionCall(false)
         }
-        // console.log("session loading", loading);
+        console.log("session loading", loading);
         // if (session) console.log("access Token", session.accessToken);
         if (!session && !loading) router.replace('/', undefined, { shallow: true })
     }, [session, loading])
@@ -94,7 +95,7 @@ function UserLayout(props) {
 
     //views
 
-    if (!session && props.user.isLoading) {
+    if (!session || props.user.isLoading) {
         return (
             <div className="relative h-screen w-full flex justify-center items-center">
                 <HashLoader size={!matchsSM ? 60 : 100} color={theme == "dark" ? "#fff" : "#62646f"} />
