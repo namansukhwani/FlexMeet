@@ -186,10 +186,7 @@ function Home(props) {
                     setMeetPasscode(nanoid(8))
                 }}
                 toggleModal={() => { setIsModalOpen(!isModalOpen) }}
-                height="h-4/5"
-                width="w-5/12"
-                heightmd="h-4/5"
-                widthmd="w-6/12"
+                className="lg:h-4/5 lg:w-5/12 md:h-4/5 md:w-6/12"
             >
                 <div className="flex flex-col w-full justify-between">
                     <div>
