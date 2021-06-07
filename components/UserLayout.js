@@ -53,15 +53,15 @@ function UserLayout(props) {
     }, [matchsSM])
 
     useEffect(() => {
-        console.log("change session", session);
+        // console.log("change session", session);
         if (session && firstSessionCall) {
-            console.log("HELLO BHAI CHAL JA YRR");
+            // console.log("HELLO BHAI CHAL JA YRR");
             props.fetchUser(session.accessToken);
             connectToSocketIo();
             setfirstSessionCall(false)
         }
-        console.log("session loading", loading);
-        if (session) console.log("access Token", session.accessToken);
+        // console.log("session loading", loading);
+        // if (session) console.log("access Token", session.accessToken);
         if (!session && !loading) router.replace('/', undefined, { shallow: true })
     }, [session, loading])
 
@@ -126,7 +126,7 @@ function UserLayout(props) {
             <main className=" relative h-screen w-full pt-16">
                 {isSidebarOpen && <div className=" z-20 absolute top-0 bottom-0 right-0 left-0 inset-0 bg-gray-500 bg-opacity-30 transition-opacity md:hidden" onClick={() => { setisSidebarOpen(!isSidebarOpen); }} />}
                 <Header openModal={() => setisModalOpen(!isModalOpen)} openSidebarMobile={() => { setisSidebarOpen(!isSidebarOpen); }} toggleProfileMenu={() => { setIsProfileMenuOpen(!isProfileMenuOpen) }} />
-                <ProfileDropdownMenu refVar={profileMenuRef} isOpen={isProfileMenuOpen} logout={() => logOut()} />
+                <ProfileDropdownMenu refVar={profileMenuRef} isOpen={isProfileMenuOpen} logout={() => logOut()} closeMenu={() => { setIsProfileMenuOpen(false) }} />
                 {props.children}
             </main>
         </>

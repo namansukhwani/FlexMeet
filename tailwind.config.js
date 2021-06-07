@@ -20,7 +20,8 @@ module.exports = {
           otherCardLight: '#318cf9',
           scrollBar: "#333543",
           backdropBlurDark: '#282c3a98',
-          backdropBlur: '#D1D5DB98'
+          backdropBlur: '#D1D5DB98',
+          purple: "#8e44ad"
         }
       }
     },

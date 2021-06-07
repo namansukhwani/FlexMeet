@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { RiVideoAddFill } from 'react-icons/ri'
-import { BsFillPlusSquareFill, BsThreeDots } from 'react-icons/bs';
+import { BsCalendarFill, BsFillPlusSquareFill, BsThreeDots } from 'react-icons/bs';
 import { SiGooglecalendar } from 'react-icons/si';
 import { MdScreenShare } from 'react-icons/md';
 import Image from 'next/image';
@@ -10,6 +10,10 @@ import { useSession, signIn, signOut } from 'next-auth/client'
 import { useRouter } from 'next/router';
 import { scheduledMeets } from '../../data/scheduledMeetd'
 import { connect } from 'react-redux';
+import Modal from './../../components/Modal';
+import { ImCheckboxChecked, ImCheckboxUnchecked } from 'react-icons/im';
+import { nanoid } from 'nanoid';
+import { ButtonColor, ButtonGray } from './../../components/buttons';
 
 const mapStateToProps = state => ({
     user: state.user
@@ -23,8 +27,15 @@ const mapDispatchToProps = dispatch => {
 function Home(props) {
     const [session, loading] = useSession()
     const router = useRouter();
+
     //state
     const [time, settime] = useState(new Date())
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    //new meeting states
+    const [meetingTitle, setmeetingTitle] = useState('');
+    const [secureMetting, setsecureMetting] = useState(false)
+    const [meetingId, setmeetingId] = useState(nanoid());
+    const [meetPasscode, setMeetPasscode] = useState(nanoid(8));
 
     useEffect(() => {
 
@@ -51,7 +62,7 @@ function Home(props) {
             <div className="relative flex  flex-col overflow-y-scroll h-full md:overflow-y-hidden md:flex-row scrollbar-none">
                 <div className="md:border-r lg:border-r border-gray-300 dark:border-gray-800 px-6 py-3 md:w-2/4 lg:w-2/5 lg:py-10 lg:px-12 md:py-10 md:px-12">
                     <div className="grid grid-flow-row w-full grid-cols-2 gap-3 md:gap-6">
-                        <div key="sjdfbnas" className=" flex flex-col justify-between max-h-48 bg-appColor-newCardDark dark:bg-appColor-newCard rounded-xl shadow-lg p-3 md:p-5 transform transition duration-200 ease-in-out md:hover:scale-105">
+                        <div key="sjdfbnas" className=" flex flex-col justify-between max-h-48 bg-appColor-newCardDark dark:bg-appColor-newCard rounded-xl shadow-lg p-3 md:p-5 transform transition duration-200 ease-in-out md:hover:scale-105 cursor-pointer" onClick={() => setIsModalOpen(!isModalOpen)}>
                             <div className="w-10 h-10 md:w-14 md:h-14 flex align-middle justify-center rounded-xl bg-appColor-newCardLight">
                                 <RiVideoAddFill size={26} className=" self-center" />
                             </div>
@@ -60,7 +71,7 @@ function Home(props) {
                                 <p className="font-extralight text-xs">set up new meeting</p>
                             </div>
                         </div>
-                        <div key="dgfhsf" className=" flex flex-col justify-between max-h-48 w-auto self-stretch  bg-appColor-otherCardDark dark:bg-appColor-otherCard rounded-xl shadow-lg p-3 md:p-5 transform transition duration-200 ease-in-out md:hover:scale-105">
+                        <div key="dgfhsf" className=" flex flex-col justify-between max-h-48 w-auto self-stretch  bg-appColor-otherCardDark dark:bg-appColor-otherCard rounded-xl shadow-lg p-3 md:p-5 transform transition duration-200 ease-in-out md:hover:scale-105 cursor-pointer">
                             <div className="w-10 h-10 md:w-14 md:h-14 flex align-middle justify-center rounded-xl bg-appColor-otherCardLight">
                                 <BsFillPlusSquareFill size={20} className=" self-center" />
                             </div>
@@ -69,7 +80,7 @@ function Home(props) {
                                 <p className="font-extralight text-xs">via invitation link</p>
                             </div>
                         </div>
-                        <div key="kiuwfhmdstgt" className=" flex flex-col justify-between max-h-48 w-auto self-stretch  bg-appColor-otherCardDark dark:bg-appColor-otherCard rounded-xl shadow-lg p-3 md:p-5 transform transition duration-200 ease-in-out md:hover:scale-105">
+                        <div key="kiuwfhmdstgt" className=" flex flex-col justify-between max-h-48 w-auto self-stretch  bg-appColor-otherCardDark dark:bg-appColor-otherCard rounded-xl shadow-lg p-3 md:p-5 transform transition duration-200 ease-in-out md:hover:scale-105 cursor-pointer">
                             <div className="w-10 h-10 md:w-14 md:h-14 flex align-middle justify-center rounded-xl bg-appColor-otherCardLight">
                                 <SiGooglecalendar size={20} className=" self-center" />
                             </div>
@@ -78,7 +89,7 @@ function Home(props) {
                                 <p className="font-extralight text-xs">plan your meeting</p>
                             </div>
                         </div>
-                        <div key="dfgsnjjqwr" className=" flex flex-col justify-between max-h-48 w-auto self-stretch  bg-appColor-otherCardDark dark:bg-appColor-otherCard rounded-xl shadow-lg p-3 md:p-5 transform transition duration-200 ease-in-out md:hover:scale-105">
+                        <div key="dfgsnjjqwr" className=" flex flex-col justify-between max-h-48 w-auto self-stretch  bg-appColor-otherCardDark dark:bg-appColor-otherCard rounded-xl shadow-lg p-3 md:p-5 transform transition duration-200 ease-in-out md:hover:scale-105 cursor-pointer">
                             <div className="w-10 h-10 md:w-14 md:h-14 flex align-middle justify-center rounded-xl bg-appColor-otherCardLight">
                                 <MdScreenShare size={20} className=" self-center" />
                             </div>
@@ -166,6 +177,80 @@ function Home(props) {
                     </div>
                 </div>
             </div>
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => {
+                    setmeetingId(nanoid());
+                    setmeetingTitle('');
+                    setsecureMetting(false);
+                    setMeetPasscode(nanoid(8))
+                }}
+                toggleModal={() => { setIsModalOpen(!isModalOpen) }}
+                height="h-4/5"
+                width="w-5/12"
+                heightmd="h-4/5"
+                widthmd="w-6/12"
+            >
+                <div className="flex flex-col w-full justify-between">
+                    <div>
+                        <div className="flex flex-row justify-center items-center pb-5 md:py-5 border-b border-gray-300 dark:border-gray-800 md:justify-start">
+                            <BsCalendarFill className="text-lg" />
+                            <p className="text-xl font-medium ml-3">New Meeting</p>
+                        </div>
+                        <div className="flex border-b border-gray-300 dark:border-gray-800">
+                            <input
+                                type="text"
+                                value={meetingTitle}
+                                onChange={(e) => setmeetingTitle(e.target.value)}
+                                className="px-2 py-5 md:px-0 font-sans placeholder-appColor-appLight dark:placeholder-appColor-caption w-full text-black dark:text-white bg-transparent border-0 outline-none focus:outline-none"
+                                placeholder="Meeting title here"
+                            />
+                        </div>
+                        <div className="flex flex-col border-b border-gray-300 dark:border-gray-800 py-5 ">
+                            <p className="text-appColor-appLight dark:text-appColor-caption text-sm font-bold">Security Passcode</p>
+                            <div className="flex flex-row mt-1 w-max cursor-pointer justify-center items-center" onClick={() => setsecureMetting(!secureMetting)}>
+                                {secureMetting ?
+                                    <ImCheckboxChecked size={16} className="text-appColor-otherCardDark" />
+                                    :
+                                    <ImCheckboxUnchecked size={16} className="text-appColor-appLight dark:text-appColor-caption" />
+                                }
+                                <p className="text-sm ml-3">Add a passcode</p>
+                            </div>
+                            {secureMetting &&
+                                <div className="flex flex-row mt-3 ">
+                                    <div className="p-2 rounded-xl bg-gray-300 dark:bg-appColor-appLight flex ease-in-out transition border dark:border-appColor-appExtraLight border-gray-500 ">
+                                        <input
+                                            type="text"
+                                            value={meetPasscode}
+                                            onChange={(e) => setMeetPasscode(e.target.value)}
+                                            className="ml-1 font-sans placeholder-appColor-appLight dark:placeholder-appColor-caption text-black dark:text-white bg-gray-300 dark:bg-appColor-appLight border-0 outline-none focus:outline-none"
+                                            placeholder="passcode here"
+                                        />
+                                    </div>
+                                    <button className="text-white bg-appColor-purple rounded-xl p-2 focus:outline-none outline-none text-xs font-bold md:text-sm px-3 w-min ml-3" onClick={() => navigator.clipboard.writeText(meetPasscode)}>
+                                        Copy
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                        <div className="flex flex-col py-5">
+                            <p className="text-appColor-appLight dark:text-appColor-caption text-sm font-bold">Meeting ID</p>
+                            <div className="flex flex-row mt-1 w-max justify-center items-center">
+                                <div className=" bg-gray-400 dark:bg-appColor-appExtraLight rounded-xl p-2 focus:outline-none outline-none text-xs md:text-sm px-3 w-max">
+                                    {meetingId}
+                                </div>
+                                <button className="text-white bg-appColor-purple rounded-xl p-2 focus:outline-none outline-none text-xs font-bold md:text-sm px-3 w-min ml-3" onClick={() => navigator.clipboard.writeText(meetingId)}>
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-row pt-5 pb-2 md:justify-end items-center align-middle">
+                        <ButtonGray lable="Cancel" className="mr-1 w-full md:w-max py-4 md:py-3" onClick={() => { }} />
+                        <ButtonColor lable="Save" className="ml-1 w-full md:w-max py-4 md:py-3" onClick={() => { }} />
+                    </div>
+                </div>
+            </Modal>
         </>
     )
 }

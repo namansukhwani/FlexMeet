@@ -6,7 +6,7 @@ function Layout(props) {
     const { theme, setTheme } = useTheme()
 
     return (
-        <div className="relative dark:bg-appColor-dark bg-appColor-light flex h-screen w-screen font-sans" >
+        <div id="mainLayout" className="relative dark:bg-appColor-dark bg-appColor-light flex h-screen w-screen font-sans" >
             <Head>
                 <title>FlexMeet</title>
                 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
