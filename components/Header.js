@@ -3,12 +3,8 @@ import { TiThMenu } from 'react-icons/ti'
 import { FaUser } from 'react-icons/fa'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { useRouter } from 'next/router'
-import { useSession, signIn, signOut } from 'next-auth/client'
 import Image from 'next/image';
 import { connect } from 'react-redux';
-import { logoutUser } from '../redux/slices/userSlice'
-import { useDetectOutsideClick } from './../hooks/useDetectOustsideClick';
-import ProfileDropdownMenu from './ProfileDropdownMenu'
 
 const mapStateToProps = state => ({
     user: state.user
@@ -16,7 +12,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
     return {
-        logoutUser: () => dispatch(logoutUser()),
+
     }
 }
 
@@ -26,11 +22,9 @@ function Header(props) {
     const router = useRouter();
 
     //refs
-    const profileMenuRef = useRef(null);
 
     //states
     const [search, setsearch] = useState("");
-    const [isProfileMenuOpen, setIsProfileMenuOpen] = useDetectOutsideClick(profileMenuRef, false);
 
     //lifecycle
 
@@ -54,10 +48,7 @@ function Header(props) {
         return ""
     }
 
-    const logOut = () => {
-        signOut();
-        props.logoutUser()
-    }
+
 
     //views
 
@@ -78,7 +69,7 @@ function Header(props) {
                         placeholder="Search By Keywords"
                     />
                 </div>
-                <button onClick={() => { setIsProfileMenuOpen(!isProfileMenuOpen) }} className="relative w-8 h-8 md:w-10 md:h-10 flex align-middle justify-center rounded-xl bg-appColor-iconColor ml-4 self-center outline-none focus:outline-none overflow-hidden">
+                <button onClick={() => { props.toggleProfileMenu() }} className="relative w-8 h-8 md:w-10 md:h-10 flex align-middle justify-center rounded-xl bg-appColor-iconColor ml-4 self-center outline-none focus:outline-none overflow-hidden">
                     {props.user.isLoading ?
                         <FaUser className="self-center text-lg md:text-xl " />
                         :
@@ -88,7 +79,6 @@ function Header(props) {
 
                 </button>
             </div>
-            <ProfileDropdownMenu refVar={profileMenuRef} isOpen={isProfileMenuOpen} logout={() => logOut()} />
         </header>
     )
 }

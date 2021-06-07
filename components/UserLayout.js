@@ -1,17 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import Header from './Header';
 import SideBar from './SideBar';
 import { useMediaQuery } from '@react-hook/media-query'
 import ProfileModal from './profileModal';
-import { useSession } from 'next-auth/client';
+import { useSession, signOut } from 'next-auth/client';
 import HashLoader from 'react-spinners/HashLoader'
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/router'
 import { connect } from 'react-redux';
-import { fetchUser } from '../redux/slices/userSlice';
+import { fetchUser, logoutUser } from '../redux/slices/userSlice';
 import { io } from 'socket.io-client';
 import { toast } from 'react-toastify';
+import ProfileDropdownMenu from './ProfileDropdownMenu'
+import { useDetectOutsideClick } from './../hooks/useDetectOustsideClick';
 
 const mapStateToProps = state => ({
     user: state.user
@@ -20,6 +22,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
     return {
         fetchUser: token => dispatch(fetchUser(token)),
+        logoutUser: () => dispatch(logoutUser()),
     }
 }
 
@@ -30,10 +33,14 @@ function UserLayout(props) {
     const { theme, setTheme } = useTheme()
     const matchsSM = useMediaQuery('(min-width: 640px)')
 
+    //refs
+    const profileMenuRef = useRef(null);
+
     //states
     const [isSidebarOpen, setisSidebarOpen] = useState(false);
     const [isModalOpen, setisModalOpen] = useState(false)
     const [firstSessionCall, setfirstSessionCall] = useState(true)
+    const [isProfileMenuOpen, setIsProfileMenuOpen] = useDetectOutsideClick(profileMenuRef, false);
 
     //lifecycles
 
@@ -54,11 +61,16 @@ function UserLayout(props) {
             setfirstSessionCall(false)
         }
         console.log("session loading", loading);
-        // if (session) console.log("access Token", session.accessToken);
+        if (session) console.log("access Token", session.accessToken);
         if (!session && !loading) router.replace('/', undefined, { shallow: true })
     }, [session, loading])
 
     //methods
+
+    const logOut = () => {
+        signOut();
+        props.logoutUser()
+    }
 
     const createToast = message => {
         toast(message, {
@@ -113,7 +125,8 @@ function UserLayout(props) {
             {/* {isModalOpen && <ProfileModal closeModal={() => setisModalOpen(false)} />} */}
             <main className=" relative h-screen w-full pt-16">
                 {isSidebarOpen && <div className=" z-20 absolute top-0 bottom-0 right-0 left-0 inset-0 bg-gray-500 bg-opacity-30 transition-opacity md:hidden" onClick={() => { setisSidebarOpen(!isSidebarOpen); }} />}
-                <Header openModal={() => setisModalOpen(!isModalOpen)} openSidebarMobile={() => { setisSidebarOpen(!isSidebarOpen); }} />
+                <Header openModal={() => setisModalOpen(!isModalOpen)} openSidebarMobile={() => { setisSidebarOpen(!isSidebarOpen); }} toggleProfileMenu={() => { setIsProfileMenuOpen(!isProfileMenuOpen) }} />
+                <ProfileDropdownMenu refVar={profileMenuRef} isOpen={isProfileMenuOpen} logout={() => logOut()} />
                 {props.children}
             </main>
         </>

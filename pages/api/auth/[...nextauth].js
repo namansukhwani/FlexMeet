@@ -113,7 +113,7 @@ const options = {
         verifyRequest: '/auth/verify-request', // (used for check email message)
         newUser: '/me' // If set, new users will be directed here on first sign in
     },
-
+    secret: process.env.REFRESH_TOKEN_SECRET
     // debug: true
 }
 
