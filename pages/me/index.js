@@ -246,7 +246,7 @@ function Home(props) {
                         </div>
                     </div>
                     <div className="flex flex-row pt-5 pb-2 md:justify-end items-center align-middle">
-                        <ButtonGray lable="Cancel" className="mr-1 w-full md:w-max py-4 md:py-3" onClick={() => { }} />
+                        <ButtonGray lable="Cancel" className="mr-1 w-full md:w-max py-4 md:py-3" onClick={() => { setIsModalOpen(!isModalOpen) }} />
                         <ButtonColor lable="Save" className="ml-1 w-full md:w-max py-4 md:py-3" onClick={() => { }} />
                     </div>
                 </div>

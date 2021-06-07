@@ -24,7 +24,7 @@ const ProfileDropdownMenu = (props) => {
 
     return (
         <>
-            <div className={` ${props.isOpen ? "flex" : "hidden"} justify-center items-cente dark:bg-appColor-appExtraLight dark:bg-opacity-50 bg-gray-300 bg-opacity-50 filter transition-opacity z-20 absolute top-0 bottom-0 right-0 left-0 w-screen h-screen inset-0 md:hidden `} />
+            <div className={` ${props.isOpen ? "flex" : "hidden"} justify-center items-cente dark:bg-appColor-appExtraLight dark:bg-opacity-80 bg-gray-300 bg-opacity-80 filter transition-opacity z-20 absolute top-0 bottom-0 right-0 left-0 w-screen h-screen inset-0 md:hidden `} />
             <div ref={props.refVar} className={`absolute z-30 top-1/4 flex self-stretch left-8 right-8 md:self-auto md:w-min rounded-xl overflow-hidden dark:bg-appColor-backdropBlurDark shadow-lg bg-appColor-backdropBlur backdrop-filter backdrop-blur-md md:left-auto md:top-20 md:right-4 ${props.isOpen ? "flex opacity-100" : " opacity-0 hidden"} ease-in-out duration-200 transform transition`}>
                 <div className="flex flex-col p-2 self-stretch w-full md:w-min md:self-auto">
                     <div className="flex flex-row self-stretch justify-start items-center cursor-pointer p-2" onClick={() => { props.closeMenu() }}>
