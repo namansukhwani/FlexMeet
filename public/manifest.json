@@ -1,7 +1,7 @@
 {
     "theme_color": "#1c1f2e",
     "background_color": "#1c1f2e",
-    "display": "minimal-ui",
+    "display": "standalone",
     "scope": "/",
     "start_url": "/",
     "name": "FlexMeet",
