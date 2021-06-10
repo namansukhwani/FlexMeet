@@ -11,7 +11,8 @@ if (process.env.NEXT_PUBLIC_NODE_ENV == "production") {
                 "images.unsplash.com",
                 "encrypted-tbn0.gstatic.com",
                 "img.freepik.com",
-                "lh3.googleusercontent.com"
+                "lh3.googleusercontent.com",
+                "storage.googleapis.com"
             ]
         },
         pwa: {
@@ -31,7 +32,8 @@ else {
                 "images.unsplash.com",
                 "encrypted-tbn0.gstatic.com",
                 "img.freepik.com",
-                "lh3.googleusercontent.com"
+                "lh3.googleusercontent.com",
+                "storage.googleapis.com"
             ]
         },
     }

@@ -43,14 +43,18 @@ const ProfileDropdownMenu = (props) => {
 
                     </div>
                     <div className="flex-col dark:bg-appColor-appLight bg-gray-300 rounded-xl py-3 px-5">
-                        <div className="flex flex-row self-stretch justify-start items-center cursor-pointer" onClick={() => { props.closeMenu() }}>
-                            <FaUserAlt className=" text-base" />
-                            <p className=" text-base ml-3">My Profile</p>
-                        </div>
-                        <div className="flex flex-row self-stretch justify-start items-center mt-4 cursor-pointer" onClick={() => { props.closeMenu() }}>
-                            <AiFillBell className=" text-lg" />
-                            <p className=" text-base ml-3">Notifications</p>
-                        </div>
+                        <Link href="/me/profile">
+                            <div className="flex flex-row self-stretch justify-start items-center cursor-pointer" onClick={() => { props.closeMenu() }}>
+                                <FaUserAlt className=" text-base" />
+                                <p className=" text-base ml-3">My Profile</p>
+                            </div>
+                        </Link>
+                        <Link href="/me/meeting/qdXHPpWAOY-WMLAZk7fPk">
+                            <div className="flex flex-row self-stretch justify-start items-center mt-4 cursor-pointer" onClick={() => { props.closeMenu() }}>
+                                <AiFillBell className=" text-lg" />
+                                <p className=" text-base ml-3">Notifications</p>
+                            </div>
+                        </Link>
                         <Link href="/me/settings">
                             <div className="flex flex-row self-stretch justify-start items-center mt-4 cursor-pointer" onClick={() => { props.closeMenu() }}>
                                 <AiFillSetting className=" text-lg" />

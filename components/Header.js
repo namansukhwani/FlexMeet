@@ -45,6 +45,12 @@ function Header(props) {
         else if ('/me/settings' == router.pathname) {
             return "Settings"
         }
+        else if (router.pathname.startsWith('/me/meeting')) {
+            return "Meeting"
+        }
+        else if ('/me/profile' == router.pathname) {
+            return "My Profile"
+        }
         return ""
     }
 

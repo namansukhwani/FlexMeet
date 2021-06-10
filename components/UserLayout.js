@@ -95,13 +95,13 @@ function UserLayout(props) {
 
         socket.on('hello', socket => {
             console.log(socket);
-            createToast(`Welcome ${props.user.user.name}`);
+            // createToast(`Welcome ${props.user.user.name}`);
         })
 
         socket.on('connect', () => {
             console.log("Sucessfully connected to WSS server");
             console.log(socket.id);
-            createToast("Realtime connection Sucessful with FlexMeet Server");
+            // createToast("Realtime connection Sucessful with FlexMeet Server");
         })
     }
 
