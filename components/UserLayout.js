@@ -72,6 +72,10 @@ function UserLayout(props) {
         props.logoutUser()
     }
 
+    const startHark = () => {
+
+    }
+
     const createToast = message => {
         toast(message, {
             position: "bottom-right",
@@ -121,11 +125,11 @@ function UserLayout(props) {
             <Head>
                 <title>FlexMeet</title>
             </Head>
-            <SideBar isSidebarOpen={isSidebarOpen} closeSidebarMobile={() => setisSidebarOpen(false)} openSidebarMobile={() => { setisSidebarOpen(!isSidebarOpen); }} />
+            {!router.pathname.startsWith('/me/meeting') && <SideBar isSidebarOpen={isSidebarOpen} closeSidebarMobile={() => setisSidebarOpen(false)} openSidebarMobile={() => { setisSidebarOpen(!isSidebarOpen); }} />}
             {/* {isModalOpen && <ProfileModal closeModal={() => setisModalOpen(false)} />} */}
-            <main className=" relative h-screen w-full pt-16">
+            <main className={` relative h-screen w-full ${!router.pathname.startsWith('/me/meeting') && "pt-16"}`}>
                 {isSidebarOpen && <div className=" z-20 absolute top-0 bottom-0 right-0 left-0 inset-0 bg-gray-500 bg-opacity-30 transition-opacity md:hidden" onClick={() => { setisSidebarOpen(!isSidebarOpen); }} />}
-                <Header openModal={() => setisModalOpen(!isModalOpen)} openSidebarMobile={() => { setisSidebarOpen(!isSidebarOpen); }} toggleProfileMenu={() => { setIsProfileMenuOpen(!isProfileMenuOpen) }} />
+                {!router.pathname.startsWith('/me/meeting') && <Header openModal={() => setisModalOpen(!isModalOpen)} openSidebarMobile={() => { setisSidebarOpen(!isSidebarOpen); }} toggleProfileMenu={() => { setIsProfileMenuOpen(!isProfileMenuOpen) }} />}
                 <ProfileDropdownMenu refVar={profileMenuRef} isOpen={isProfileMenuOpen} logout={() => logOut()} closeMenu={() => { setIsProfileMenuOpen(false) }} />
                 {props.children}
             </main>

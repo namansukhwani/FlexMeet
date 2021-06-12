@@ -109,7 +109,7 @@ function Home(props) {
                                 <p className="self-end text-xs md:text-sm text-appColor-dark">{moment(time).format('dddd, Do MMM YYYY')}</p>
                             </div>
                             <div className="absolute flex top-3 right-4">
-                                <h1 className=" font-bold md:text-3xl text-xl self-end text-appColor-dark">{"Welcome, " + props.user.user.name}</h1>
+                                <h1 className=" font-bold lg:text-3xl text-xl self-end text-appColor-dark">{"Welcome, " + props.user.user.name}</h1>
                             </div>
                         </div>
                         <br />
