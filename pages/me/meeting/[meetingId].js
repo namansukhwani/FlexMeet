@@ -38,7 +38,7 @@ const Meeting = (props) => {
         if (!stream.getAudioTracks()[0]) {
             throw new Error("No audio stream found");
         }
-        const harkTemp = Hark(stream, { play: false, interval: '400ms', threshold: '60db' })
+        const harkTemp = Hark(stream, { play: false, interval: '300ms', threshold: '56db' })
         sethark(harkTemp);
 
         harkTemp.on('volume_change', (dBs, threshold) => {

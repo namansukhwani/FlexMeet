@@ -135,26 +135,26 @@ html::-webkit-scrollbar-thumb {
   display: none !important;
 }
 
-.barlevel1  { height: 10%;}
-.barlevel2  { height: 20%;}
-.barlevel3  { height: 30%;}
-.barlevel4  { height: 40%;}
-.barlevel5  { height: 49.5%;}
-.barlevel6  { height: 59.5%;}
-.barlevel7  { height: 69%;}
-.barlevel8  { height: 79%;}
-.barlevel9  { height: 88%;}
-.barlevel10 { height: 95%;}
+.barlevel1  { height: 9.8%;}
+.barlevel2  { height: 19.6%;}
+.barlevel3  { height: 29.4%;}
+.barlevel4  { height: 39.2%;}
+.barlevel5  { height: 49%;}
+.barlevel6  { height: 58.8%;}
+.barlevel7  { height: 68.6%;}
+.barlevel8  { height: 78.4%;}
+.barlevel9  { height: 88.2%;}
+.barlevel10 { height: 98%;}
 .barlevel0  { height: 0;}
 
-.barsmallLevel1  { height: 6%;}
-.barsmallLevel2  { height: 12%;}
-.barsmallLevel3  { height: 18%;}
-.barsmallLevel4  { height: 24%;}
-.barsmallLevel5  { height: 30%;}
-.barsmallLevel6  { height: 36%;}
-.barsmallLevel7  { height: 42%;}
-.barsmallLevel8  { height: 48%;}
-.barsmallLevel9  { height: 54%;}
-.barsmallLevel10 { height: 60%;}
+.barsmallLevel1  { height: 7%;}
+.barsmallLevel2  { height: 14%;}
+.barsmallLevel3  { height: 21%;}
+.barsmallLevel4  { height: 28%;}
+.barsmallLevel5  { height: 35%;}
+.barsmallLevel6  { height: 42%;}
+.barsmallLevel7  { height: 49%;}
+.barsmallLevel8  { height: 56%;}
+.barsmallLevel9  { height: 63%;}
+.barsmallLevel10 { height: 70%;}
 .barsmallLevel0  { height: 0;}
