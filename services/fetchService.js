@@ -21,6 +21,10 @@ export const getUser = async token => {
     )
 }
 
+export const updateProfilePic = async (image, token) => {
+
+}
+
 export const updateUser = async (userUpdateData, token) => {
 
 }

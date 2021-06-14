@@ -1,11 +1,11 @@
 import { useState, useRef } from 'react'
 import { TiThMenu } from 'react-icons/ti'
 import { FaUser } from 'react-icons/fa'
-import { AiOutlineSearch } from 'react-icons/ai'
+import { AiOutlineSearch, AiOutlineDown } from 'react-icons/ai'
 import { useRouter } from 'next/router'
 import Image from 'next/image';
 import { connect } from 'react-redux';
-
+import { GoChevronDown } from 'react-icons/go'
 const mapStateToProps = state => ({
     user: state.user
 })
@@ -51,6 +51,9 @@ function Header(props) {
         else if ('/me/profile' == router.pathname) {
             return "My Profile"
         }
+        else if (router.pathname.startsWith('/me/profile/notification')) {
+            return "Notifications"
+        }
         return ""
     }
 
@@ -75,15 +78,18 @@ function Header(props) {
                         placeholder="Search By Keywords"
                     />
                 </div>
-                <button onClick={() => { props.toggleProfileMenu() }} className="relative w-8 h-8 md:w-10 md:h-10 flex align-middle justify-center rounded-xl bg-appColor-iconColor ml-4 self-center outline-none focus:outline-none overflow-hidden">
-                    {props.user.isLoading ?
-                        <FaUser className="self-center text-lg md:text-xl " />
-                        :
-                        <Image src={props.user.user.picture} objectFit="cover" width={40} height={40} />
-                        // <FaUser className="self-center text-lg md:text-xl " />
-                    }
+                <div className="flex flex-row p-1 items-center cursor-pointer hover:bg-gray-300 dark:hover:bg-appColor-appLight ml-4 rounded-full" onClick={() => { props.toggleProfileMenu() }}>
+                    <button className="relative w-8 h-8 md:w-10 md:h-10 flex align-middle justify-center rounded-full bg-appColor-iconColor self-center outline-none focus:outline-none overflow-hidden">
+                        {props.user.isLoading ?
+                            <FaUser className="self-center text-lg md:text-xl " />
+                            :
+                            <Image src={props.user.user.picture} objectFit="cover" layout="fill" className="rounded-full" />
+                            // <FaUser className="self-center text-lg md:text-xl " />
+                        }
+                    </button>
+                    <GoChevronDown className="text-base md:text-lg ml-2 text-appColor-caption" />
+                </div>
 
-                </button>
             </div>
         </header>
     )
