@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getUser } from '../../services/fetchService'
+import { getUser, updateProfilePic } from '../../services/fetchService'
 
 const initialState = {
+    pictureLoading: false,
     isLoading: true,
     user: null,
     err: null
@@ -36,6 +37,29 @@ export const updateUser = createAsyncThunk(
 
     }
 )
+
+export const updateUserPicture = createAsyncThunk(
+    "user/updatePicture",
+    async (data, thunkApi) => {
+        try {
+            const res = await updateProfilePic(data.image, data.token);
+            const response = await res.json()
+            // console.log("redux user profile pic update", response);
+            if (response.status) {
+                return response.data
+            }
+            else {
+                const err = new Error('Unable to update user profile ')
+                throw err;
+            }
+        }
+        catch (err) {
+            console.log(err);
+            return thunkApi.rejectWithValue(err)
+        }
+    }
+)
+
 export const logoutUser = createAsyncThunk(
     "user/logout",
     async (_, thunkApi) => {
@@ -77,7 +101,20 @@ const user = createSlice({
             state.isLoading = false;
             state.err = null;
             state.user = action.payload
-        }
+        },
+        [updateUserPicture.pending]: (state, action) => {
+            state.pictureLoading = true;
+        },
+        [updateUserPicture.fulfilled]: (state, action) => {
+            state.pictureLoading = false;
+            state.isLoading = false;
+            state.err = null;
+            state.user = action.payload
+        },
+        [updateUserPicture.rejected]: (state, action) => {
+            state.err = action.payload
+            state.pictureLoading = false;
+        },
     }
 })
 

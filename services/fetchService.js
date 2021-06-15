@@ -12,7 +12,7 @@ export const wakeServer = () => {
 export const getUser = async token => {
     // console.log("Get User is called ");
     return await fetch(`${url}/users`, {
-        method: 'GET',
+        method: 'get',
         headers: {
             'Authorization': 'Bearer ' + token,
             'Content-Type': 'application/json'
@@ -21,10 +21,26 @@ export const getUser = async token => {
     )
 }
 
-export const updateProfilePic = async (image, token) => {
-
+export const updateUser = async (userData, token) => {
+    return await fetch(`${url}/users/update`, {
+        method: 'put',
+        headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+    })
 }
 
-export const updateUser = async (userUpdateData, token) => {
+export const updateProfilePic = async (image, token) => {
+    const formData = new FormData();
+    formData.append('file', image.image, image.image.name)
 
+    return await fetch(`${url}/upload/profilepic`, {
+        method: 'put',
+        headers: {
+            'Authorization': 'Bearer ' + token,
+        },
+        body: formData
+    })
 }

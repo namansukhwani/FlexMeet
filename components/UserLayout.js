@@ -65,6 +65,29 @@ function UserLayout(props) {
         if (!session && !loading) router.replace('/', undefined, { shallow: true })
     }, [session, loading])
 
+    useEffect(() => {
+        const err = props.user.err
+        if (err) {
+            if (typeof err === "string" || err instanceof String) {
+                createToast(err);
+            }
+            else {
+                if (err instanceof Error) {
+                    createToast(err.message)
+                }
+                else {
+                    try {
+                        createToast(err.err)
+                    }
+                    catch (e) {
+                        createToast(JSON.stringify(err))
+                    }
+
+                }
+            }
+        }
+    }, [props.user.err])
+
     //methods
 
     const logOut = () => {

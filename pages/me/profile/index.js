@@ -7,17 +7,24 @@ import { MdModeEdit } from 'react-icons/md';
 import Modal from '../../../components/Modal'
 import { ButtonColor, ButtonGray } from '../../../components/buttons';
 import { BeatLoader } from 'react-spinners';
+import { updateUserPicture } from '../../../redux/slices/userSlice'
+import { useSession } from 'next-auth/client';
+import { useTheme } from 'next-themes'
+
 const mapStateToProps = state => ({
     user: state.user
 })
 
 const mapDispatchToProps = dispatch => {
     return {
-
+        updateUserPicture: (image, token) => dispatch(updateUserPicture({ image: image, token: token }))
     }
 }
 
 const Profile = (props) => {
+
+    const [session, loading] = useSession()
+    const { theme, setTheme } = useTheme()
 
     //refs
 
@@ -55,7 +62,7 @@ const Profile = (props) => {
             setnewImageLoading(false)
             return false;
         }
-        // console.log(imageFile);
+        // console.log(imageFile.name);
 
         const fileReader = new FileReader();
         fileReader.onload = e => {
@@ -84,6 +91,13 @@ const Profile = (props) => {
     }
 
     const uploadNewProfilePic = () => {
+        if (newImage != null) {
+            props.updateUserPicture(newImage, session.accessToken);
+            setIsModalOpen(false);
+        }
+        else {
+            return
+        }
 
     }
 
@@ -105,6 +119,9 @@ const Profile = (props) => {
                             <div onClick={() => { setIsModalOpen(!isModalOpen) }} className="absolute flex justify-center items-center right-1 bottom-1 w-7 h-7 rounded-full bg-appColor-otherCard cursor-pointer hover:scale-105 transform ease-in-out duration-150 ">
                                 <MdModeEdit size={16} />
                             </div>
+                            {props.user.pictureLoading && <div className="absolute flex inset-0 rounded-full bg-appColor-otherCard bg-opacity-40 filter justify-center items-center">
+                                <BeatLoader size={10} margin={2} color={theme == "dark" ? "#fff" : "#62646f"} />
+                            </div>}
                         </div>
                     </div>
                     <div className="flex flex-row items-center w-full mt-2">
@@ -167,7 +184,7 @@ const Profile = (props) => {
                             </div>
                         </div>
                     </div>
-                    <ButtonColor lable="Update Profile" className="w-full md:w-2/5 py-4 md:py-3 mt-5" onClick={() => { }} />
+                    <ButtonColor lable="Update Profile" className="w-full self-center md:w-3/5 py-4 md:py-3 mt-5" onClick={() => { }} />
                 </div>
             </div>
             <Modal
@@ -224,7 +241,7 @@ const Profile = (props) => {
                     </div>
                     <div className="flex flex-row pt-5 pb-2 md:justify-end items-center align-middle">
                         <ButtonGray lable="Cancel" className="mr-1 w-full py-4 md:py-3" onClick={() => { setIsModalOpen(!isModalOpen) }} />
-                        <ButtonColor lable="Update" className="ml-1 w-full py-4 md:py-3" onClick={() => { }} />
+                        <ButtonColor lable="Update" className="ml-1 w-full py-4 md:py-3" onClick={() => { uploadNewProfilePic(); }} />
                     </div>
                 </div>
             </Modal>
