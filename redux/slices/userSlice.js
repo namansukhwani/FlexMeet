@@ -1,7 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getUser, updateProfilePic } from '../../services/fetchService'
+import { getUser, updateProfilePic, updateUserData } from '../../services/fetchService'
+import { useSession, signOut } from 'next-auth/client'
+import { createToast } from './../../components/extraComponents';
 
 const initialState = {
+    userUpdating: false,
     pictureLoading: false,
     isLoading: true,
     user: null,
@@ -20,6 +23,7 @@ export const fetchUser = createAsyncThunk(
                 return response.data
             }
             else {
+                signOut();
                 const err = new Error('Unable to fetch user details')
                 throw err;
             }
@@ -34,7 +38,22 @@ export const fetchUser = createAsyncThunk(
 export const updateUser = createAsyncThunk(
     'user/updateUser',
     async (data, thunkApi) => {
-
+        try {
+            const res = await updateUserData(data.data, data.token);
+            const response = await res.json()
+            // console.log("redux user profile pic update", response);
+            if (response.status) {
+                return response.data
+            }
+            else {
+                const err = new Error('Unable to update user ')
+                throw err;
+            }
+        }
+        catch (err) {
+            console.log(err);
+            return thunkApi.rejectWithValue(err)
+        }
     }
 )
 
@@ -115,6 +134,21 @@ const user = createSlice({
             state.err = action.payload
             state.pictureLoading = false;
         },
+        [updateUser.pending]: (state, action) => {
+            state.userUpdating = true
+        },
+        [updateUser.fulfilled]: (state, action) => {
+            state.userUpdating = false;
+            state.isLoading = false;
+            state.err = null;
+            state.user = action.payload
+            createToast("User sucessfully updated.")
+        },
+        [updateUser.rejected]: (state, action) => {
+            state.err = action.payload
+            state.userUpdating = false;
+        },
+
     }
 })
 

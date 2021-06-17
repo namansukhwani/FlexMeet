@@ -59,7 +59,7 @@ callbacks.signIn = async function signIn(user, account, metadata) {
                 user.accessToken = data.token;
                 return true;
             })
-            .catch(err => { console.log('error from api ', err); return false; })
+            .catch(err => { console.log('error from api ', err); throw new Error('Unable to login'); return false; })
 
     }
     catch (err) {

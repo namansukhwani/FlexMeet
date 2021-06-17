@@ -95,10 +95,6 @@ function UserLayout(props) {
         props.logoutUser()
     }
 
-    const startHark = () => {
-
-    }
-
     const createToast = message => {
         toast(message, {
             position: "bottom-right",

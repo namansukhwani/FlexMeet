@@ -21,7 +21,7 @@ export const getUser = async token => {
     )
 }
 
-export const updateUser = async (userData, token) => {
+export const updateUserData = async (userData, token) => {
     return await fetch(`${url}/users/update`, {
         method: 'put',
         headers: {

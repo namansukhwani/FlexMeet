@@ -159,6 +159,15 @@ html::-webkit-scrollbar-thumb {
 .barsmallLevel10 { height: 70%;}
 .barsmallLevel0  { height: 0;}
 
-.fileInput{
-  
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: #000000 !important;
+  -webkit-box-shadow: 0 0 0px 30px #eee inset !important;
 }

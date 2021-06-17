@@ -12,7 +12,8 @@ if (process.env.NEXT_PUBLIC_NODE_ENV == "production") {
                 "encrypted-tbn0.gstatic.com",
                 "img.freepik.com",
                 "lh3.googleusercontent.com",
-                "storage.googleapis.com"
+                "storage.googleapis.com",
+                "flexmeet.herokuapp.com"
             ]
         },
         pwa: {
@@ -33,7 +34,8 @@ else {
                 "encrypted-tbn0.gstatic.com",
                 "img.freepik.com",
                 "lh3.googleusercontent.com",
-                "storage.googleapis.com"
+                "storage.googleapis.com",
+                "flexmeet.herokuapp.com"
             ]
         },
     }

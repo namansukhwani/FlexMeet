@@ -244,7 +244,7 @@ function Home(props) {
                     </div>
                     <div className="flex flex-row pt-5 pb-2 md:justify-end items-center align-middle">
                         <ButtonGray lable="Cancel" className="mr-1 w-full md:w-max py-4 md:py-3" onClick={() => { setIsModalOpen(!isModalOpen) }} />
-                        <ButtonColor lable="Save" className="ml-1 w-full md:w-max py-4 md:py-3" onClick={() => { }} />
+                        <ButtonColor lable="Save" className="ml-1 w-full md:w-max py-4 md:py-3" onClick={() => { router.push('/me/meeting/qdXHPpWAOY-WMLAZk7fPk') }} />
                     </div>
                 </div>
             </Modal>

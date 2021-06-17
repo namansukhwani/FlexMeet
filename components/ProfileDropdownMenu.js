@@ -51,7 +51,7 @@ const ProfileDropdownMenu = (props) => {
                                 <p className=" text-base ml-3">My Profile</p>
                             </div>
                         </Link>
-                        <Link href="/me/meeting/qdXHPpWAOY-WMLAZk7fPk">
+                        <Link href="/me/profile/notification">
                             <div className="flex flex-row self-stretch justify-start items-center mt-4 cursor-pointer" onClick={() => { props.closeMenu() }}>
                                 <AiFillBell className=" text-lg" />
                                 <p className=" text-base ml-3">Notifications</p>
