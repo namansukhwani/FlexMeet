@@ -88,7 +88,7 @@ html::-webkit-scrollbar-thumb {
   bottom: 0;
   left: 0;
   right: 0;
-  /* z-index: -2; */
+  z-index:0;
   background: rgb(16, 121, 249);
   animation: pluse 500ms infinite;
   border-radius: 0.75rem;

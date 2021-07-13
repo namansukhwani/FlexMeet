@@ -1,9 +1,23 @@
+import { useEffect, useState } from 'react'
 import Head from 'next/head';
 import { useTheme } from 'next-themes'
 import { ToastContainer } from 'react-toastify';
+import { useSession } from 'next-auth/client';
 
 function Layout(props) {
     const { theme, setTheme } = useTheme()
+    // const [session, loading] = useSession()
+
+
+    // const [firstSessionCall, setfirstSessionCall] = useState(true)
+    // const [token, settoken] = useState(null)
+
+    // useEffect(() => {
+    //     if (session && firstSessionCall) {
+    //         settoken(session.accessToken)
+    //         setfirstSessionCall(false)
+    //     }
+    // }, [session, loading])
 
     return (
         <div id="mainLayout" className="relative dark:bg-appColor-dark bg-appColor-light flex h-screen w-screen font-sans" >

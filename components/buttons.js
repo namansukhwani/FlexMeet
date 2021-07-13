@@ -13,3 +13,19 @@ export const ButtonGray = ({ onClick, lable, className = "", mode = "outline", s
         </button>
     )
 }
+
+export const ButtonRed = ({ onClick, lable, className = "", mode = "noboder", style = {} }) => {
+    return (
+        <button style={style} className={` ${mode == "outline" ? " border" : " border-0"} bg-red-800 dark:border-appColor-appExtraLight border-gray-400 rounded-xl p-2 focus:outline-none outline-none text-sm font-bold md:text-sm px-3 w-full ${className}`} onClick={onClick}>
+            {lable}
+        </button>
+    )
+}
+
+export const ButtonSetColor = ({ onClick, lable, className = "", mode = "outline", style = {} }) => {
+    return (
+        <button style={style} className={` ${mode == "outline" ? " border" : " border-0"} dark:border-appColor-appExtraLight border-gray-400 rounded-xl p-2 focus:outline-none outline-none text-sm font-bold md:text-sm px-3 w-full ${className}`} onClick={onClick}>
+            {lable}
+        </button>
+    )
+}

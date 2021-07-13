@@ -1,31 +1,55 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { ButtonGray, ButtonColor } from '../../../components/buttons';
 import { FaMicrophoneSlash, FaMicrophone, FaVideo, FaVideoSlash } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import Hark from "hark";
+import { connect } from 'react-redux';
+import useResizeObserver from "use-resize-observer";
+import FooterMeeting from './../../../components/FooterMeeting';
+import MessagesSidebar from "../../../components/MessagesSidebar";
+import VideoView from './../../../components/meetingVideoView';
+import { useWebsocket } from './../../../services/socketService';
+
+
+const mapStateToProps = state => ({
+    user: state.user
+})
+
+const mapDispatchToProps = dispatch => {
+    return {
+
+    }
+}
 
 const Meeting = (props) => {
 
     //others const  and hooks
     const router = useRouter();
+    const { meetingId } = router.query;
+    const socket = useWebsocket();
 
     //refs
     const videoRef = useRef(null)
+    const videoGridDiv = useRef(null);
+    const { ref, width, height } = useResizeObserver();
 
     //states
     const [cameraPermession, setcameraPermession] = useState(false);
     const [audioPermession, setaudioPermession] = useState(false);
     const [loadingCamView, setloadingCamView] = useState(true);
     const [yourStream, setYourStream] = useState(null);
-    const [yourAudioStream, setyourAudioStream] = useState(null);
     const [hark, sethark] = useState(null);
     const [audioVolume, setaudioVolume] = useState(0);
+    const [ifJoined, setifJoined] = useState(false)
+    const [isMessagesOpen, setisMessagesOpen] = useState(false)
+    const [permissionsGranted, setpermissionsGranted] = useState(false)
+    const [participantsList, setparticipantsList] = useState([])
+    const [allStreams, setallStreams] = useState([]);
 
     //lifecycles
     useEffect(() => {
-        getVideo();
-        getAudio();
+        getAudioVideo();
 
         return () => {
             cancelGoback(true);
@@ -68,102 +92,137 @@ const Meeting = (props) => {
         })
     }
 
-    const toggleVideo = () => {
-        if (cameraPermession) {
-            setcameraPermession(false);
-            videoRef.current.pause();
-            setloadingCamView(true)
-            videoRef.current.src = "";
-            yourStream.getVideoTracks().forEach(track => {
-                if (track.readyState == 'live') {
-                    track.stop()
+    const connectToPeers = async () => {
+
+        const Peer = (await import('peerjs')).default
+
+        var peer = new Peer(props.user.socketId, {
+            secure: process.env.NEXT_PUBLIC_NODE_ENV != "devlopment",
+            path: "/peerjs",
+            key: process.env.NEXT_PUBLIC_PEERJS_KEY,
+            port: process.env.NEXT_PUBLIC_NODE_ENV == "devlopment" ? 8000 : 443,
+            host: process.env.NEXT_PUBLIC_NODE_ENV == "devlopment" ? "/" : process.env.NEXT_PUBLIC_PEERJS_HOST
+        })
+
+        peer.on('open', id => {
+            console.log("PEER ID", id);
+            socket.emit('join-room', { id: meetingId })
+            setifJoined(true);
+        })
+
+        socket.on('new-room-user', data => {
+            // console.log('new user joined room', data.data);
+            // setparticipantsList(participants => [...participants, data.data])
+            if (data.data.socketId !== props.user.socketId) {
+                console.log("new user inside called");
+
+                var call = peer.call(data.data.socketId, yourStream);
+                var videoCreated = false;
+                call.on('stream', stream => {
+                    if (!videoCreated) {
+                        videoCreated = true;
+                        const streamData = {
+                            id: data.data.socketId,
+                            // userData: data.data,
+                            stream: stream
+                        }
+                        setallStreams(streams => streams.concat(streamData))
+                    }
+                })
+                console.log(allStreams)
+            }
+        })
+
+        peer.on('call', call => {
+            console.log("incoming call");
+            console.log(call.peer);
+            call.answer(yourStream);
+            var videoCreated = false;
+            call.on('stream', stream => {
+                if (!videoCreated) {
+                    videoCreated = true;
+                    const streamData = {
+                        id: call.peer,
+                        // userData: data.data,
+                        stream: stream
+                    }
+                    setallStreams(streams => streams.concat(streamData))
                 }
+
             })
+            console.log(allStreams)
+        })
+    }
+
+    const toggleVideo = () => {
+        if (permissionsGranted) {
+            if (cameraPermession) {
+                yourStream.getVideoTracks()[0].enabled = !(yourStream.getVideoTracks()[0].enabled);
+                setloadingCamView(true)
+                setcameraPermession(false);
+            }
+            else {
+                yourStream.getVideoTracks()[0].enabled = !(yourStream.getVideoTracks()[0].enabled);
+                setloadingCamView(false);
+                setcameraPermession(true);
+                let video = videoRef.current;
+                video.srcObject = yourStream;
+                video.play();
+                video.muted = true;
+            }
         }
         else {
-            navigator.mediaDevices.getUserMedia({
-                video: { width: 742, height: 416 },
-            })
-                .then(stream => {
-                    setYourStream(stream);
-                    setloadingCamView(false);
-                    setcameraPermession(true);
-                    let video = videoRef.current;
-                    video.srcObject = stream;
-                    video.play();
-                })
-                .catch(err => {
-                    console.log(err);
-                    createToast('Allow camera permission for your video')
-                })
+            getAudioVideo();
         }
-
     }
 
     const toggleAudio = () => {
-        if (audioPermession) {
-            setaudioPermession(false);
-            if (hark) {
-                hark.stop();
-                setaudioVolume(0)
-            }
-            yourAudioStream.getAudioTracks().forEach(track => {
-                if (track.readyState == 'live') {
-                    track.stop();
+        if (permissionsGranted) {
+            if (audioPermession) {
+                setaudioPermession(false);
+                if (hark) {
+                    hark.stop();
+                    setaudioVolume(0)
                 }
-            })
+                yourStream.getAudioTracks()[0].enabled = !(yourStream.getAudioTracks()[0].enabled);
+            }
+            else {
+                yourStream.getAudioTracks()[0].enabled = !(yourStream.getAudioTracks()[0].enabled);
+                setaudioPermession(true);
+                startHark(yourStream);
+            }
         }
         else {
-            navigator.mediaDevices.getUserMedia({
-                audio: true
-            })
-                .then(stream => {
-                    setyourAudioStream(stream);
-                    setaudioPermession(true);
-                    startHark(stream);
-                })
-                .catch(err => {
-                    console.log(err);
-                    createToast('Allow audio permission to turn on mic')
-                })
+            getAudioVideo();
         }
 
     }
 
-
-    const getAudio = () => {
+    const getAudioVideo = () => {
         navigator.mediaDevices.getUserMedia({
-            audio: true
-        })
-            .then(stream => {
-                setyourAudioStream(stream);
-                setaudioPermession(true);
-                startHark(stream);
-            })
-            .catch(err => {
-                console.log(err);
-            })
-    }
-
-    const getVideo = () => {
-        navigator.mediaDevices.getUserMedia({
-            video: { width: 742, height: 416 },
+            video: { width: 640, height: 480, facingMode: "user" },
             // video: { aspectRatio: 1 / 1 },
-            // audio: true,
+            audio: true,
         })
             .then(stream => {
-                console.log("sucess");
+                // console.log("sucess");
+                setpermissionsGranted(true);
                 setYourStream(stream);
                 setloadingCamView(false);
                 setcameraPermession(true);
+                setaudioPermession(true);
+                startHark(stream);
 
                 let video = videoRef.current;
                 video.srcObject = stream;
                 video.play();
+                video.muted = true;
             }
             )
             .catch(err => {
                 console.log(err);
+                setpermissionsGranted(false)
+                createToast("Please allow camera and microphone permission to continue.");
             })
     }
 
@@ -175,24 +234,78 @@ const Meeting = (props) => {
                 }
             })
         }
-        if (yourAudioStream) {
-            yourAudioStream.getTracks().forEach(track => {
-                if (track.readyState == 'live') {
-                    track.stop();
-                }
-            })
-        }
         if (!unmout) {
             router.back();
         }
     }
 
+    const joinMeeting = () => {
+        if (permissionsGranted) {
+            const streamData = {
+                id: props.user.socketId,
+                stream: yourStream
+            }
+            setallStreams([streamData])
+
+            connectToPeers();
+            startRoomEventListning();
+        }
+        else {
+            getAudioVideo();
+        }
+    }
+
+    const startRoomEventListning = () => {
+
+        socket.on('new-room-user', data => {
+            console.log('new user joined room', data.data);
+            setparticipantsList(participants => [...participants, data.data])
+        })
+
+        socket.on("user-left", data => {
+            console.log(data);
+        })
+    }
+
     //views
+
+    if (ifJoined) {
+        return (
+            <div className="flex flex-row h-full w-full">
+                <div className="relative flex h-full w-full pb-16 ">
+                    <FooterMeeting
+                        isMessagesOpen={isMessagesOpen}
+                        toggleMessages={() => {
+                            setisMessagesOpen(!isMessagesOpen)
+                        }}
+                        audioPermession={audioPermession}
+                        cameraPermession={cameraPermession}
+                        toggleVideo={toggleVideo}
+                        toggleAudio={toggleAudio}
+                    />
+                    <div ref={ref} className="flex relative w-full h-full overflow-hidden">
+                        {/* <div className="grid w-full grid-flow-rows grid-cols-2 auto-col-fr  gap-2 justify-center items-center overflow-scroll scrollDiv ">
+                            <VideoView video={yourStream} />
+                            <VideoView video={yourStream} />
+                            <VideoView video={yourStream} />
+                        </div> */}
+                        <div className="flex items-center flex-wrap content-center justify-center align-middle absolute inset-0">
+                            {allStreams.map((stream, index) => {
+                                return <VideoView index={index} video={stream} myId={props.user.socketId} parentDiv={{ width: width - 4, height: height - 4 }} totalLength={allStreams.length} />
+                            })}
+                        </div>
+                    </div>
+                </div>
+                <MessagesSidebar participantsList={participantsList} meetingId={meetingId} isMessagesOpen={isMessagesOpen} closeMessages={() => { setisMessagesOpen(false) }} />
+            </div>
+        )
+    }
+
     return (
         <div className="relative flex flex-col lg:flex-row justify-between lg:justify-evenly h-full items-start py-5 lg:items-center px-5">
             <div className={`flex flex-col justify-center self-center items-center lg:self-center ${loadingCamView && " w-2/4 h-auto"}`}>
-                {loadingCamView ?
-                    <div className={`relative flex w-full h-48 md:h-64 lg:w-3/5  self-center `} style={{
+                <>
+                    <div className={`relative w-full h-48 md:h-64 lg:w-3/5  self-center ${loadingCamView ? "flex" : "hidden"}`} style={{
                         maxHeight: '416px', maxWidth: '742px', minHeight: '144px',
                     }} >
                         {audioPermession ?
@@ -212,8 +325,7 @@ const Meeting = (props) => {
                         </div>
 
                     </div>
-                    :
-                    <div className="relative rounded-xl self-center " >
+                    <div className={`relative rounded-xl self-center ${loadingCamView ? "hidden" : "block"}`} >
                         {audioPermession ?
                             <div className="absolute z-20 flex flex-row justify-evenly items-center bottom-5 left-5 p-1 w-10 h-10 rounded-full dark:bg-appColor-dark bg-appColor-light shadow-lg">
                                 <div className={` bg-appColor-otherCardDark p-1 rounded-full barsmallLevel${audioVolume}`} />
@@ -226,9 +338,9 @@ const Meeting = (props) => {
                             </div>
                         }
                         <div className={`pulseDiv ${audioVolume > 2 ? "block" : "hiddenImp"}`} />
-                        <video ref={videoRef} className=" h-auto max-w-full rounded-xl overflow-hidden flipVideo" />
+                        <video ref={videoRef} className=" h-auto max-w-full rounded-xl overflow-hidden flipVideo object-cover" />
                     </div>
-                }
+                </>
                 <div className="flex flex-row self-center justify-center items-center py-4">
                     <ButtonGray
                         lable={audioPermession ?
@@ -260,7 +372,7 @@ const Meeting = (props) => {
                     />
                     <ButtonColor
                         lable="Join"
-                        onClick={() => { }}
+                        onClick={() => { joinMeeting() }}
                         className="mr-3 px-6 self-stretch lg:self-center "
                     />
                 </div>
@@ -269,4 +381,4 @@ const Meeting = (props) => {
     )
 }
 
-export default Meeting;
+export default connect(mapStateToProps, mapDispatchToProps)(Meeting);

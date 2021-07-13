@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import '../styles/globals.css'
 import 'react-toastify/dist/ReactToastify.min.css';
+import 'emoji-mart/css/emoji-mart.css'
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react'
 import { ThemeProvider } from 'next-themes'

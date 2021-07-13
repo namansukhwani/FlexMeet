@@ -4,6 +4,7 @@ import { useSession, signOut } from 'next-auth/client'
 import { createToast } from './../../components/extraComponents';
 
 const initialState = {
+    socketId: null,
     userUpdating: false,
     pictureLoading: false,
     isLoading: true,
@@ -90,6 +91,12 @@ const user = createSlice({
     name: 'user',
     initialState,
     reducers: {
+        nullSocket(state) {
+            state.socketId = null
+        },
+        changeSocket(state, action) {
+            state.socketId = action.payload
+        },
         addUser(state, action) {
             state.isLoading = false;
             state.err = null;
@@ -152,5 +159,5 @@ const user = createSlice({
     }
 })
 
-export const { addUser, loadingUser, errUser } = user.actions;
+export const { addUser, loadingUser, errUser, changeSocket, nullSocket } = user.actions;
 export default user.reducer;

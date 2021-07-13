@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import Head from 'next/head';
 import Header from './Header';
 import SideBar from './SideBar';
@@ -9,11 +9,12 @@ import HashLoader from 'react-spinners/HashLoader'
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/router'
 import { connect } from 'react-redux';
-import { fetchUser, logoutUser } from '../redux/slices/userSlice';
+import { fetchUser, logoutUser, nullSocket, changeSocket } from '../redux/slices/userSlice';
 import { io } from 'socket.io-client';
 import { toast } from 'react-toastify';
 import ProfileDropdownMenu from './ProfileDropdownMenu'
 import { useDetectOutsideClick } from './../hooks/useDetectOustsideClick';
+import { SocketContext } from '../services/socketService'
 
 const mapStateToProps = state => ({
     user: state.user
@@ -23,6 +24,8 @@ const mapDispatchToProps = dispatch => {
     return {
         fetchUser: token => dispatch(fetchUser(token)),
         logoutUser: () => dispatch(logoutUser()),
+        nullSocket: () => dispatch(nullSocket()),
+        changeSocket: (socketId) => dispatch(changeSocket(socketId))
     }
 }
 
@@ -33,6 +36,9 @@ function UserLayout(props) {
     const { theme, setTheme } = useTheme()
     const matchsSM = useMediaQuery('(min-width: 640px)')
 
+    //socket setup
+    const [socket, setsocket] = useState(null)
+
     //refs
     const profileMenuRef = useRef(null);
 
@@ -42,25 +48,26 @@ function UserLayout(props) {
     const [firstSessionCall, setfirstSessionCall] = useState(true)
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useDetectOutsideClick(profileMenuRef, false);
 
+
     //lifecycles
 
     useEffect(() => {
-        // console.log("Matches", matchsSM);
+        props.nullSocket()
+    }, [])
+
+    useEffect(() => {
         if (!matchsSM) {
             setisSidebarOpen(false);
-            // console.log(isSidebarOpen);
         }
     }, [matchsSM])
 
     useEffect(() => {
         // console.log("change session", session);
         if (session && firstSessionCall) {
-            // console.log("HELLO BHAI CHAL JA YRR");
             props.fetchUser(session.accessToken);
             connectToSocketIo();
             setfirstSessionCall(false)
         }
-        // console.log("session loading", loading);
         // if (session) console.log("access Token", session.accessToken);
         if (!session && !loading) router.replace('/', undefined, { shallow: true })
     }, [session, loading])
@@ -109,23 +116,27 @@ function UserLayout(props) {
         })
     }
 
-    const connectToSocketIo = () => {
-        const socket = io(process.env.NEXT_PUBLIC_SERVER_URL, {
+    const connectToSocketIo = async () => {
+        const socketTmp = io(process.env.NEXT_PUBLIC_SERVER_URL, {
             extraHeaders: {
                 Authorization: "Bearer " + session.accessToken,
             }
         })
 
-        socket.on('hello', socket => {
-            console.log(socket);
+        setsocket(socketTmp);
+
+        socketTmp.on('hello', socket => {
+            // console.log(socket);
             // createToast(`Welcome ${props.user.user.name}`);
         })
 
-        socket.on('connect', () => {
+        socketTmp.on('connect', () => {
             console.log("Sucessfully connected to WSS server");
-            console.log(socket.id);
+            console.log(socketTmp.id);
+            props.changeSocket(socketTmp.id);
             // createToast("Realtime connection Sucessful with FlexMeet Server");
         })
+
     }
 
     //views
@@ -140,7 +151,7 @@ function UserLayout(props) {
 
     return (
 
-        <>
+        <SocketContext.Provider value={socket}>
             <Head>
                 <title>FlexMeet</title>
             </Head>
@@ -152,7 +163,7 @@ function UserLayout(props) {
                 <ProfileDropdownMenu refVar={profileMenuRef} isOpen={isProfileMenuOpen} logout={() => logOut()} closeMenu={() => { setIsProfileMenuOpen(false) }} />
                 {props.children}
             </main>
-        </>
+        </SocketContext.Provider>
 
 
     )

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, } from 'react';
 import { RiVideoAddFill } from 'react-icons/ri'
 import { BsCalendarFill, BsFillPlusSquareFill, BsThreeDots } from 'react-icons/bs';
 import { SiGooglecalendar } from 'react-icons/si';
@@ -14,6 +14,7 @@ import Modal from './../../components/Modal';
 import { ImCheckboxChecked, ImCheckboxUnchecked } from 'react-icons/im';
 import { nanoid } from 'nanoid';
 import { ButtonColor, ButtonGray } from './../../components/buttons';
+import { useWebsocket } from './../../services/socketService';
 
 const mapStateToProps = state => ({
     user: state.user
@@ -28,6 +29,8 @@ function Home(props) {
     const [session, loading] = useSession()
     const router = useRouter();
 
+    const socket = useWebsocket()
+
     //state
     const [time, settime] = useState(new Date())
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -36,16 +39,30 @@ function Home(props) {
     const [secureMetting, setsecureMetting] = useState(false)
     const [meetingId, setmeetingId] = useState(nanoid());
     const [meetPasscode, setMeetPasscode] = useState(nanoid(8));
+    const [firstSessionCall, setfirstSessionCall] = useState(true)
 
     useEffect(() => {
 
         const currentTime = setInterval(() => {
             settime(new Date())
         }, 1000)
+
         return () => {
             clearInterval(currentTime);
         }
+
     }, [])
+
+    useEffect(() => {
+        if (session) {
+            if (socket !== null) {
+                socket.on('hello', () => {
+                    console.log("Hello BETA MAZA A GAYA");
+                })
+            }
+            setfirstSessionCall(false)
+        }
+    }, [session, loading])
 
     if (typeof window !== "undefined" && loading) return null;
 
