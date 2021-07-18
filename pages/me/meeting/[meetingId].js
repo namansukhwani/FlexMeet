@@ -10,15 +10,18 @@ import FooterMeeting from './../../../components/FooterMeeting';
 import MessagesSidebar from "../../../components/MessagesSidebar";
 import VideoView from './../../../components/meetingVideoView';
 import { useWebsocket } from './../../../services/socketService';
-
+import { updateMeetingParticipants, addStream, deleteStream, deleteMeeting } from '../../../redux/slices/meetingSlice';
 
 const mapStateToProps = state => ({
-    user: state.user
+    user: state.user,
+    meeting: state.meeting
 })
 
 const mapDispatchToProps = dispatch => {
     return {
-
+        addStream: (streamData) => dispatch(addStream(streamData)),
+        deleteStream: (userData) => dispatch(deleteStream(userData)),
+        deleteMeeting: () => dispatch(deleteMeeting())
     }
 }
 
@@ -126,7 +129,8 @@ const Meeting = (props) => {
                             // userData: data.data,
                             stream: stream
                         }
-                        setallStreams(streams => streams.concat(streamData))
+                        // setallStreams(streams => streams.concat(streamData))
+                        props.addStream(streamData)
                     }
                 })
                 console.log(allStreams)
@@ -146,7 +150,8 @@ const Meeting = (props) => {
                         // userData: data.data,
                         stream: stream
                     }
-                    setallStreams(streams => streams.concat(streamData))
+                    // setallStreams(streams => streams.concat(streamData))
+                    props.addStream(streamData)
                 }
 
             })
@@ -160,11 +165,13 @@ const Meeting = (props) => {
                 yourStream.getVideoTracks()[0].enabled = !(yourStream.getVideoTracks()[0].enabled);
                 setloadingCamView(true)
                 setcameraPermession(false);
+                socket.emit('toggle-video', { roomId: meetingId, value: false, id: props.user.socketId });
             }
             else {
                 yourStream.getVideoTracks()[0].enabled = !(yourStream.getVideoTracks()[0].enabled);
                 setloadingCamView(false);
                 setcameraPermession(true);
+                socket.emit('toggle-video', { roomId: meetingId, value: true, id: props.user.socketId });
                 let video = videoRef.current;
                 video.srcObject = yourStream;
                 video.play();
@@ -176,6 +183,7 @@ const Meeting = (props) => {
         }
     }
 
+
     const toggleAudio = () => {
         if (permissionsGranted) {
             if (audioPermession) {
@@ -185,10 +193,12 @@ const Meeting = (props) => {
                     setaudioVolume(0)
                 }
                 yourStream.getAudioTracks()[0].enabled = !(yourStream.getAudioTracks()[0].enabled);
+                socket.emit('toggle-audio', { roomId: meetingId, value: false, id: props.user.socketId });
             }
             else {
                 yourStream.getAudioTracks()[0].enabled = !(yourStream.getAudioTracks()[0].enabled);
                 setaudioPermession(true);
+                socket.emit('toggle-audio', { roomId: meetingId, value: true, id: props.user.socketId });
                 startHark(yourStream);
             }
         }
@@ -242,10 +252,14 @@ const Meeting = (props) => {
     const joinMeeting = () => {
         if (permissionsGranted) {
             const streamData = {
+                _id: props.user.user._id,
                 id: props.user.socketId,
+                name: props.user.user.name,
+                picture: props.user.user.picture,
                 stream: yourStream
             }
-            setallStreams([streamData])
+            // setallStreams([streamData])
+            props.addStream(streamData)
 
             connectToPeers();
             startRoomEventListning();
@@ -254,6 +268,19 @@ const Meeting = (props) => {
             getAudioVideo();
         }
     }
+
+    const endCall = () => {
+        setifJoined(false);
+        socket.emit('leave-room');
+        props.deleteMeeting();
+        router.push('/')
+    }
+
+
+    const removeParticipant = (user) => {
+
+
+    };
 
     const startRoomEventListning = () => {
 
@@ -264,6 +291,8 @@ const Meeting = (props) => {
 
         socket.on("user-left", data => {
             console.log(data);
+            // removeParticipant(data);
+            props.deleteStream(data.data)
         })
     }
 
@@ -282,6 +311,7 @@ const Meeting = (props) => {
                         cameraPermession={cameraPermession}
                         toggleVideo={toggleVideo}
                         toggleAudio={toggleAudio}
+                        endCall={endCall}
                     />
                     <div ref={ref} className="flex relative w-full h-full overflow-hidden">
                         {/* <div className="grid w-full grid-flow-rows grid-cols-2 auto-col-fr  gap-2 justify-center items-center overflow-scroll scrollDiv ">
@@ -290,8 +320,8 @@ const Meeting = (props) => {
                             <VideoView video={yourStream} />
                         </div> */}
                         <div className="flex items-center flex-wrap content-center justify-center align-middle absolute inset-0">
-                            {allStreams.map((stream, index) => {
-                                return <VideoView index={index} video={stream} myId={props.user.socketId} parentDiv={{ width: width - 4, height: height - 4 }} totalLength={allStreams.length} />
+                            {props.meeting.allStreams.map((stream, index) => {
+                                return <VideoView index={index} video={stream} myId={props.user.socketId} parentDiv={{ width: width - 4, height: height - 4 }} totalLength={props.meeting.allStreams.length} />
                             })}
                         </div>
                     </div>

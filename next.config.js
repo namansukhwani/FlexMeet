@@ -20,6 +20,7 @@ if (process.env.NEXT_PUBLIC_NODE_ENV == "production") {
             dest: 'public',
             runtimeCaching,
         },
+        // generateEtags: false,
     })
 
 }
@@ -38,5 +39,6 @@ else {
                 "flexmeet.herokuapp.com"
             ]
         },
+        // generateEtags: false,
     }
 }

@@ -4,8 +4,11 @@ import { FaMicrophoneSlash, FaMicrophone, FaVideo, FaVideoSlash } from 'react-ic
 import { AiFillPushpin, AiOutlinePushpin } from 'react-icons/ai'
 import { FaUser } from 'react-icons/fa'
 import Image from 'next/image';
+import { useWebsocket } from '../services/socketService';
 
 const VideoView = (props) => {
+    const socket = useWebsocket();
+
     //refs
     const mainDiv = useRef(null);
     const videoRef = useRef(null)
@@ -15,6 +18,8 @@ const VideoView = (props) => {
     const [hark, sethark] = useState(null);
     const [audioVolume, setaudioVolume] = useState(0);
     const [pinIndicatorOpacity, setpinIndicatorOpacity] = useState(false);
+    const [isAudio, setisAudio] = useState(true);
+    const [isVideo, setisVideo] = useState(true);
 
     // console.log(props.video.stream)
     //lifecycle
@@ -36,21 +41,40 @@ const VideoView = (props) => {
             startHark(props.video.stream);
         }
 
+        socket.on(`toggle-video-${props.video.id}`, data => {
+            setisVideo(data.value);
+        })
+
+        socket.on(`toggle-audio-${props.video.id}`, data => {
+            setisAudio(data.value)
+            if (!data.value) {
+                if (hark) {
+                    hark.stop();
+                    setaudioVolume(0)
+                }
+            }
+            else {
+                if (!hark) {
+                    startHark(props.video.stream)
+                }
+            }
+        })
+
     }, [])
 
-    useEffect(() => {
-        if (!props.video.stream.getAudioTracks()[0].enabled) {
-            if (hark) {
-                hark.stop();
-                setaudioVolume(0)
-            }
-        }
-        else {
-            if (!hark) {
-                startHark(props.video.stream)
-            }
-        }
-    }, [props.video.stream.getAudioTracks()[0].enabled])
+    // useEffect(() => {
+    //     if (!props.video.stream.getAudioTracks()[0].enabled) {
+    //         if (hark) {
+    //             hark.stop();
+    //             setaudioVolume(0)
+    //         }
+    //     }
+    //     else {
+    //         if (!hark) {
+    //             startHark(props.video.stream)
+    //         }
+    //     }
+    // }, [props.video.stream.getAudioTracks()[0].enabled])
 
     useEffect(() => {
         // console.log("effect");
@@ -110,8 +134,8 @@ const VideoView = (props) => {
     //views
     return (
         <div key={props.index.toString()} ref={mainDiv} style={{ width: divWidth, height: divHeight, margin: 4 }} className={`relative inline-block bg-gray-300 dark:bg-appColor-appLight rounded-xl justify-center items-center shadow-md m-2 border-appColor-otherCard ${false ? "border-4" : "border-0"}`} onMouseEnter={() => setpinIndicatorOpacity(true)} onMouseLeave={() => setpinIndicatorOpacity(false)}>
-            <video ref={videoRef} className={`z-10 h-full w-full rounded-xl object-cover ${props.video.stream.getVideoTracks()[0].enabled ? "block" : " hidden"}`} />
-            {props.video.stream.getAudioTracks()[0].enabled ?
+            <video ref={videoRef} className={`z-10 h-full w-full rounded-xl object-cover ${isVideo ? "block" : " hidden"}`} />
+            {isAudio ?
                 <div className="absolute z-20 flex flex-row justify-evenly items-center bottom-2 left-2 p-1 w-8 h-8 rounded-full dark:bg-appColor-dark bg-appColor-light shadow-lg">
                     <div className={` bg-appColor-otherCardDark p-1 rounded-full barsmallLevel${audioVolume}`} />
                     <div className={` bg-appColor-otherCardDark p-1 rounded-full barlevel${audioVolume}`} />
@@ -122,7 +146,7 @@ const VideoView = (props) => {
                     <FaMicrophoneSlash size={18} />
                 </div>
             }
-            <div className={`w-full h-full flex-col justify-center items-center ${props.video.stream.getVideoTracks()[0].enabled ? "hidden" : "flex"}`}>
+            <div className={`w-full h-full flex-col justify-center items-center ${isVideo ? "hidden" : "flex"}`}>
                 <div className=" w-14 h-14 lg:w-16 lg:h-16 relative flex items-center bg-gray-200 dark:bg-appColor-appLight justify-center rounded-full border-2 dark:border-appColor-appExtraLight border-gray-400 shadow-lg">
                     {false ?
                         <FaUser className="self-center text-xl md:text-xl " />

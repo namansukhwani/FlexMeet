@@ -38,7 +38,7 @@ const FooterMeeting = (props) => {
                             <p className="font-bold ml-1 md:flex hidden line-clamp-1 text-white" >End Call</p>
                         </div>
                     }
-                    onClick={() => { }}
+                    onClick={() => { props.endCall() }}
                     className="flex justify-center items-center ml-3 px-6 "
                 />
                 <ButtonGray
@@ -128,7 +128,7 @@ const FooterMeeting = (props) => {
                                 <p className="font-bold ml-1 md:block hidden text-white" >End Call</p>
                             </div>
                         }
-                        onClick={() => { }}
+                        onClick={() => { props.endCall() }}
                         className="flex justify-center items-center ml-3 px-6 "
                     />
                 </div>
