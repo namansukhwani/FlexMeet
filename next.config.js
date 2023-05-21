@@ -13,7 +13,8 @@ if (process.env.NEXT_PUBLIC_NODE_ENV == "production") {
                 "img.freepik.com",
                 "lh3.googleusercontent.com",
                 "storage.googleapis.com",
-                "flexmeet.herokuapp.com"
+                "flexmeet.herokuapp.com",
+                "flexmeet-services.onrender.com"
             ]
         },
         pwa: {
