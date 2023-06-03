@@ -27,17 +27,17 @@ const callbacks = {}
 
 callbacks.signIn = async function signIn(user, account, metadata) {
 
-    const googleUser = JSON.stringify({
+    const googleUser = {
         "googleId": metadata.id,
         "email": metadata.email,
         "name": metadata.name,
         "givenName": metadata.given_name,
         "familyName": metadata.family_name,
         "picture": metadata.picture
-    })
+    }
 
-    // console.log("metaata ", metadata);
-
+    console.log("Login Info",googleUser);
+    console.log("metadata ", metadata);
     try {
         await fetch(`${url}/users/login`, {
             method: 'POST',
