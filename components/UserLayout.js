@@ -118,8 +118,10 @@ function UserLayout(props) {
 
     const connectToSocketIo = async () => {
         const socketTmp = io(process.env.NEXT_PUBLIC_SERVER_URL, {
-            extraHeaders: {
-                Authorization: "Bearer " + session.accessToken,
+            transports: ["websocket"],
+            secure:true,
+            auth: {
+                token: "Bearer " + session.accessToken,
             }
         })
 
