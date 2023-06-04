@@ -103,7 +103,7 @@ const Meeting = (props) => {
             secure: process.env.NEXT_PUBLIC_NODE_ENV != "devlopment",
             path: "/peerjs",
             key: process.env.NEXT_PUBLIC_PEERJS_KEY,
-            port: process.env.NEXT_PUBLIC_NODE_ENV == "devlopment" ? 3010 : 443,
+            // port: process.env.NEXT_PUBLIC_NODE_ENV == "devlopment" ? 8000 : 443,
             host: process.env.NEXT_PUBLIC_NODE_ENV == "devlopment" ? "/" : process.env.NEXT_PUBLIC_PEERJS_HOST
         })
 
