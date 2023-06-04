@@ -37,7 +37,8 @@ else {
                 "img.freepik.com",
                 "lh3.googleusercontent.com",
                 "storage.googleapis.com",
-                "flexmeet.herokuapp.com"
+                "flexmeet.herokuapp.com",
+                "flexmeet-services.onrender.com"
             ]
         },
         // generateEtags: false,
