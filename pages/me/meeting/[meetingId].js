@@ -101,9 +101,9 @@ const Meeting = (props) => {
 
         var peer = new Peer(props.user.socketId, {
             secure: process.env.NEXT_PUBLIC_NODE_ENV != "devlopment",
-            path: "/peerjs",
+            path: "/webRtc",
             key: process.env.NEXT_PUBLIC_PEERJS_KEY,
-            // port: process.env.NEXT_PUBLIC_NODE_ENV == "devlopment" ? 8000 : 443,
+            port: process.env.NEXT_PUBLIC_NODE_ENV == "devlopment" ? 8000 : 443,
             host: process.env.NEXT_PUBLIC_NODE_ENV == "devlopment" ? "/" : process.env.NEXT_PUBLIC_PEERJS_HOST
         })
 

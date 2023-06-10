@@ -1,14 +1,18 @@
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 import { encode } from 'base-64';
+import axios from 'axios'
 
 const url = process.env.SERVER_URL;
+
+const restClient=axios.create()
 
 const providers = [
     Providers.Google({
         clientId: process.env.GOOGOLE_ID,
         clientSecret: process.env.GOOGLE_SECRET,
         scope: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/user.phonenumbers.read https://www.googleapis.com/auth/user.birthday.read ",
+        authorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth?prompt=consent&access_type=offline&response_type=code',
         // profile(profile) {
         //     return {
         //         "googleId": profile.id,
@@ -19,6 +23,7 @@ const providers = [
         //         "picture": profile.picture
         //     }
         // },
+        debug:true
     })
 ]
 
@@ -27,43 +32,44 @@ const callbacks = {}
 
 callbacks.signIn = async function signIn(user, account, metadata) {
 
-    const googleUser = JSON.stringify({
+    const googleUser = {
         "googleId": metadata.id,
-        "email": metadata.email,
+        "email": metadata.email, 
         "name": metadata.name,
         "givenName": metadata.given_name,
         "familyName": metadata.family_name,
         "picture": metadata.picture
-    })
+    }
 
     console.log("metaata ", metadata);
     console.log(googleUser);
     try {
-        await fetch(`${url}/users/login`, {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Basic ' + encode(process.env.BASIC_AUTH_USERNAME + ":" + process.env.BASIC_AUTH_PASSWORD),
-                'Content-Type': 'application/json'
-            },
-            body: googleUser
+        const response=await restClient.request({
+            baseURL:url,
+            url:"/users/login",
+            method:"post",
+            data:googleUser,
+            auth:{
+                username:process.env.BASIC_AUTH_USERNAME,
+                password:process.env.BASIC_AUTH_PASSWORD
+            }
         })
-            .then(res => res.json())
-            .then(data => {
-                // console.log(data);
-                if (!data.status) {
-                    return false;
-                }
 
-                console.log("token from my server", data.token);
+        const data=response.data
 
-                user.accessToken = data.token;
-                return true;
-            })
-            .catch(err => { console.log('error from api ', err); throw new Error('Unable to login'); return false; })
+        if (!data?.status) {
+            return false;
+        }
+
+        console.log("token from my server", data.token);
+
+        user.accessToken = data.token;
+        return true;
 
     }
     catch (err) {
-        console.log("Error Next Auth: ", err);
+        console.error('error from api ', err);
+        console.error("Error Next Auth: ", err);
         return false;
     }
 }
