@@ -1,12 +1,15 @@
 const url = process.env.NEXT_PUBLIC_SERVER_URL
+const peerServerUrl="https://"+process.env.NEXT_PUBLIC_PEERJS_HOST
 
 export const wakeServer = () => {
-    fetch(`${url}/wake`)
-        .then(() => {
-            // console.log("server is Up");
-            return;
-        })
-        .catch(err => console.log("Error from app.js ", err))
+    Promise.all([
+        fetch(`${url}/wake`),
+        fetch(`${peerServerUrl}/wake`)
+    ])
+    .then(()=>{
+        return;
+    })
+    .catch(err => console.log("Error from app.js ", err))
 }
 
 export const getUser = async token => {
